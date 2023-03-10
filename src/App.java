@@ -27,8 +27,6 @@ public class App
         csv.readNext();
         String[] line;
         
-        //cria um arquivo binario
-        RandomAccessFile arq = new RandomAccessFile("gamees.bin", "rw");
         printInterface();
 
         Crud crud = new Crud();
@@ -115,7 +113,6 @@ public class App
 
         csv.close();
         ler.close();
-        arq.close();
     }
 }
 
