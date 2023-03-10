@@ -130,7 +130,6 @@ class Crud{
         System.out.println("Registro não encontrado");
         arq.close();
         return false;
-
     }
 
     /*update - método para atualizar registro já existente no arquivo binário
