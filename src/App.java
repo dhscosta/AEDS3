@@ -1,9 +1,9 @@
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import com.opencsv.*;
+import com.opencsv.CSVReader;
 
-public class Executa
+public class App
 {
 
     public static void printInterface()
