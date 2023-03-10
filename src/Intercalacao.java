@@ -16,7 +16,7 @@ class Intercalacao{
     public void balanceadaComum(int nRegistros, int nCaminhos)throws FileNotFoundException{
         //declaração de variáveis
         RandomAccessFile arq = new RandomAccessFile("gamees.bin", "r");
-
+        
 
     }
 }

@@ -1,7 +1,7 @@
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import com.opencsv.CSVReader;
+import com.opencsv.*;
 
 public class App
 {

@@ -2,6 +2,10 @@
     "java.project.sourcePaths": ["src"],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "lib/**/*.jar"
+        "lib/opencsv-5.7.1.jar",
+        "commons-beanutils-1.9.4/commons-beanutils-1.9.4.jar",
+        "commons-collections4-4.4/commons-collection4-4.4.jar",
+        "commons-lang3-3.12.0/commons-lang3-3.12.0.jar",
+        "commons-text-1.10.0/commons-text-1.10.0.jar"
     ]
 }
