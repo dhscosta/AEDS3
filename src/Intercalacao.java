@@ -3,6 +3,21 @@
 import java.io.*;
 import java.util.ArrayList;
 
+class Nodo{
+    public int segmento;
+    public Game jogo;
+
+    Nodo(){
+        segmento = 0;
+        jogo = new Game();
+    }
+
+    Nodo(int seg, Game registro){
+        segmento = seg;
+        jogo = registro;
+    }
+}
+
 //Classe para ordenação por intercalação
 class Intercalacao {
     // construtor
@@ -374,70 +389,74 @@ class Intercalacao {
         temp4.close();
 
     }
+
+    private int filhoEsquerdo(int i){
+        return (i*2+1);
+    }
+
+    private int filhoDireito(int i){
+        return (i*2+2);
+    }
+
+    private int pai(int i){
+        return (int) ((i-1)/2);
+    }
+
+    public void heap()throws FileNotFoundException, IOException{
+        // abrindo arquivo da base de dados
+        RandomAccessFile arq = new RandomAccessFile("gamees.bin", "rw");
+
+        // arquivos que serão utilizados para a intercalação
+        RandomAccessFile temp1 = new RandomAccessFile("temp1.bin", "rw");
+        RandomAccessFile temp2 = new RandomAccessFile("temp2.bin", "rw");
+        RandomAccessFile destino = new RandomAccessFile("temp3.bin", "rw");
+
+        ArrayList<Nodo> lista = new ArrayList<Nodo>(6);
+
+        byte[] bytes;
+        int tam = 0, segmento = 0;
+        Game jogo = new Game();
+        Nodo no = new Nodo();
+        String titulo1, titulo2;
+
+        for(int i = 0; i < arq.length(); i++){
+            if (i == 0) {
+                temp1 = new RandomAccessFile("temp1.bin", "rw");
+                temp2 = new RandomAccessFile("temp2.bin", "rw");
+                destino = new RandomAccessFile("temp3.bin", "rw");
+
+                
+            } else {
+                temp1 = new RandomAccessFile("temp2.bin", "rw");
+                temp2 = new RandomAccessFile("temp3.bin", "rw");
+                destino = new RandomAccessFile("temp1.bin", "rw");
+
+                
+            }
+
+            if(i < 6){
+                tam = arq.readInt();
+                bytes = new byte[tam];
+                arq.read(bytes);
+                jogo.fromByte(bytes);
+                no = new Nodo(segmento, jogo);
+                lista.add(no);
+            }else{
+                bytes = lista.get(0).jogo.toByte();
+                //destino
+                
+                tam = arq.readInt();
+                bytes = new byte[tam];
+                arq.read(bytes);
+                jogo.fromByte(bytes);
+
+
+            }
+        }
+
+        arq.close();
+        temp1.close();
+        temp2.close();
+        destino.close();
+    }
 }
-
-/*
- * int j = 0;
- * while(j < tamArq1 || j < tamArq2){
- * if(j < tamArq1){
- * tam = temp1.readInt();
- * arranjoByte = new byte[tam];
- * temp1.read(arranjoByte);
- * tempGame1[j].fromByte(arranjoByte);
- * }
- * 
- * if(j < tamArq2){
- * tam = temp2.readInt();
- * arranjoByte = new byte[tam];
- * temp2.read(arranjoByte);
- * tempGame2[j].fromByte(arranjoByte);
- * }
- * 
- * j++;
- * }
- * 
- * for(int i = 0; i < nRegistros; i++){
- * if(tempGame1[i].getTitle().compareTo(tempGame2[i].getTitle()) == -1){
- * arranjoByte = tempGame1[i].toByte();
- * temp3.writeInt(arranjoByte.length);
- * temp3.write(arranjoByte);
- * }else{
- * arranjoByte = tempGame2[i].toByte();
- * temp3.writeInt(arranjoByte.length);
- * temp3.write(arranjoByte);
- * }
- * 
- * if(i == (nRegistros-1) && ){
- * i = 0;
- * }
- * }
- */
-
-/*
- * for (int j = 0; j < nRegistros; j++) {
- * indice1 = arq1.getFilePointer();
- * indice2 = arq2.getFilePointer();
- * 
- * tam1 = arq1.readInt();
- * tam2 = arq2.readInt();
- * 
- * title1 = arq1.readUTF();
- * title2 = arq2.readUTF();
- * 
- * if (title1.compareTo(title2) == -1) {
- * arq1.seek(indice1);
- * arranjoByte = new byte[tam1];
- * arq1.read(arranjoByte);
- * 
- * destino.writeInt(tam1);
- * destino.write(arranjoByte);
- * } else {
- * arq2.seek(indice2);
- * arranjoByte = new byte[tam2];
- * arq2.read(arranjoByte);
- * 
- * destino.writeInt(tam1);
- * destino.write(arranjoByte);
- * }
- * }
- */
