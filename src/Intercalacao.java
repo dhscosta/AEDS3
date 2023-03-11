@@ -1,6 +1,7 @@
 
 //dependencias
 import java.io.*;
+import java.util.ArrayList;
 
 //Classe para ordenação por intercalação
 class Intercalacao {
@@ -260,8 +261,10 @@ class Intercalacao {
 
         long indice1, indice2;
         int maior = (tamArq1 > tamArq2) ? tamArq1 : tamArq2;
+        int tam1, tam2, opcao = 0, option = 0, maior2, menor1 = 0, menor2 = 0;
         String title1, title2;
-        int tam1, tam2, opcao = 0, option = 0;
+        byte[] arranjo1, arranjo2;
+        Game gamer = new Game();
         RandomAccessFile arq1, arq2, arq3, arq4, destino;
 
         while (nRegistros < arq.length()) {
@@ -291,9 +294,73 @@ class Intercalacao {
                     opcao = 0;
                 }
 
-                //repeticao para montar blocos e usar dois vetores para isso, comparando a posicao atual com a proxima
-                //convertendo de binario para objeto e o caminho contrário de novo
+                ArrayList<Game> bloco1 = new ArrayList<Game>();
+                ArrayList<Game> bloco2 = new ArrayList<Game>();
 
+                if (i < nRegistros) {
+                    tam1 = arq1.readInt();
+                    tam2 = arq2.readInt();
+
+                    arranjo1 = new byte[tam1];
+                    arranjo2 = new byte[tam2];
+
+                    arq1.read(arranjo1);
+                    arq2.read(arranjo2);
+
+                    gamer.fromByte(arranjo1);
+                    bloco1.add(gamer);
+                    gamer.fromByte(arranjo2);
+                    bloco2.add(gamer);
+                } else {
+                    indice1 = arq1.getFilePointer();
+                    indice2 = arq2.getFilePointer();
+
+                    tam1 = arq1.readInt();
+                    tam2 = arq2.readInt();
+
+                    arranjo1 = new byte[tam1];
+                    arranjo2 = new byte[tam2];
+
+                    arq1.read(arranjo1);
+                    arq2.read(arranjo2);
+
+                    gamer.fromByte(arranjo1);
+                    if (gamer.getTitle().compareTo(bloco1.get(bloco1.size() - 1).getTitle()) == 1) {
+                        bloco1.add(gamer);
+                    } else {
+                        arq1.seek(indice1);
+                    }
+
+                    gamer.fromByte(arranjo2);
+                    if (gamer.getTitle().compareTo(bloco2.get(bloco2.size() - 1).getTitle()) == 1) {
+                        bloco2.add(gamer);
+                    } else {
+                        arq2.seek(indice2);
+                    }
+                }
+
+                maior2 = (bloco1.size() < bloco2.size()) ? bloco2.size() : bloco1.size();
+
+                for (int j = 0; j < maior2; j++) {
+                    title1 = bloco1.get(j).getTitle();
+                    title2 = bloco2.get(j).getTitle();
+
+                    if(j == 0){
+                        menor1 = menor2 = -2;
+                    }
+
+                    if(title1.compareTo(title2) == -1){
+                        arranjo1 = (menor1 == j-1) ? bloco1.get(menor1).toByte(): bloco1.get(j).toByte();
+                        destino.writeInt(arranjo1.length);
+                        destino.write(arranjo1);
+                        menor2 = j;
+                    }else{
+                        arranjo2 = (menor2 == j-1) ? bloco2.get(menor2).toByte(): bloco2.get(j).toByte();
+                        destino.writeInt(arranjo2.length);
+                        destino.write(arranjo2);
+                        menor1 = j;
+                    }
+                }
             }
 
             nRegistros *= 2;
