@@ -434,7 +434,7 @@ class Intercalacao {
         int tam = 0, segmento = 0, antseg = 0;
         Game jogo = new Game(), ultJogo = new Game();
         Nodo no = new Nodo(), pos0 = new Nodo(), pos1 = new Nodo(), pos2 = new Nodo(),
-                pos3 = new Nodo(), pos4 = new Nodo(), pos5 = new Nodo(), pos6 = new Nodo();
+           pos3 = new Nodo(), pos4 = new Nodo(), pos5 = new Nodo(), pos6 = new Nodo();
 
         for (int i = 0; i < arq.length(); i++) {
             if (antseg == segmento) {
@@ -461,6 +461,7 @@ class Intercalacao {
 
                 bytes = pos0.jogo.toByte();
                 ultJogo = pos0.jogo;
+                destino.writeInt(pos0.segmento);
                 destino.writeInt(bytes.length);
                 destino.write(bytes);
 
@@ -492,18 +493,6 @@ class Intercalacao {
                         pos1.jogo = pos4.jogo;
 
                         pos4 = noTemp;
-                    } else if (pos1.segmento > pos3.segmento) {
-                        noTemp = pos1;
-                        pos1.segmento = pos3.segmento;
-                        pos1.jogo = pos3.jogo;
-
-                        pos3 = noTemp;
-                    } else if (pos1.segmento > pos4.segmento) {
-                        noTemp = pos1;
-                        pos1.segmento = pos4.segmento;
-                        pos1.jogo = pos4.jogo;
-
-                        pos4 = noTemp;
                     }
 
                 } else if (pos0.jogo.getTitle().compareTo(pos2.jogo.getTitle()) == 1) {
@@ -526,18 +515,6 @@ class Intercalacao {
                         pos2.jogo = pos6.jogo;
 
                         pos6 = noTemp;
-                    }else if(pos2.segmento > pos5.segmento){
-                        noTemp = pos2;
-                        pos2.segmento = pos5.segmento;
-                        pos2.jogo = pos5.jogo;
-
-                        pos5 = noTemp;
-                    }else if(pos2.segmento > pos6.segmento){
-                        noTemp = pos2;
-                        pos2.segmento = pos6.segmento;
-                        pos2.jogo = pos6.jogo;
-
-                        pos6 = noTemp;
                     }
                 }
 
@@ -546,7 +523,7 @@ class Intercalacao {
                     segmento = segmento + 1;
                     pos0.segmento = segmento;
 
-                    if (pos0.jogo.getTitle().compareTo(pos1.jogo.getTitle()) == 1) {
+                    if (pos0.segmento > pos1.segmento) {
                         Nodo noTemp = new Nodo();
                         noTemp = pos1;
                         pos1.segmento = pos0.segmento;
@@ -554,19 +531,7 @@ class Intercalacao {
     
                         pos0 = noTemp;
     
-                        if (pos1.jogo.getTitle().compareTo(pos3.jogo.getTitle()) == 1) {
-                            noTemp = pos1;
-                            pos1.segmento = pos3.segmento;
-                            pos1.jogo = pos3.jogo;
-    
-                            pos3 = noTemp;
-                        } else if (pos1.jogo.getTitle().compareTo(pos4.jogo.getTitle()) == 1) {
-                            noTemp = pos1;
-                            pos1.segmento = pos4.segmento;
-                            pos1.jogo = pos4.jogo;
-    
-                            pos4 = noTemp;
-                        } else if (pos1.segmento > pos3.segmento) {
+                        if (pos1.segmento > pos3.segmento) {
                             noTemp = pos1;
                             pos1.segmento = pos3.segmento;
                             pos1.jogo = pos3.jogo;
@@ -580,7 +545,7 @@ class Intercalacao {
                             pos4 = noTemp;
                         }
     
-                    } else if (pos0.jogo.getTitle().compareTo(pos2.jogo.getTitle()) == 1) {
+                    } else if (pos0.segmento > pos2.segmento) {
                         Nodo noTemp = new Nodo();
                         noTemp = pos2;
                         pos2.segmento = pos0.segmento;
@@ -588,19 +553,7 @@ class Intercalacao {
     
                         pos0 = noTemp;
     
-                        if (pos2.jogo.getTitle().compareTo(pos5.jogo.getTitle()) == 1) {
-                            noTemp = pos2;
-                            pos2.segmento = pos5.segmento;
-                            pos2.jogo = pos5.jogo;
-    
-                            pos5 = noTemp;
-                        } else if (pos2.jogo.getTitle().compareTo(pos6.jogo.getTitle()) == 1) {
-                            noTemp = pos2;
-                            pos2.segmento = pos6.segmento;
-                            pos2.jogo = pos6.jogo;
-    
-                            pos6 = noTemp;
-                        }else if(pos2.segmento > pos5.segmento){
+                        if(pos2.segmento > pos5.segmento){
                             noTemp = pos2;
                             pos2.segmento = pos5.segmento;
                             pos2.jogo = pos5.jogo;
@@ -617,11 +570,19 @@ class Intercalacao {
                 }else{
                     bytes = pos0.jogo.toByte();
                     ultJogo = pos0.jogo;
+                    destino.writeInt(pos0.segmento);
                     destino.writeInt(bytes.length);
                     destino.write(bytes);
                 }
-
             }
+        }
+
+        long maior = (temp1.length() > temp2.length()) ? temp1.length(): temp2.length();
+        long i1, i2;
+        Nodo no1 = new Nodo(), no2 = new Nodo();
+
+        for(int i = 0; i < maior; i++){
+            
         }
 
         arq.close();
