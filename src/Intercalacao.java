@@ -3,34 +3,34 @@
 import java.io.*;
 import java.util.ArrayList;
 
-class Nodo{
+class Nodo {
     public int segmento;
     public Game jogo;
 
-    Nodo(){
+    Nodo() {
         segmento = 0;
         jogo = new Game();
     }
 
-    Nodo(int seg, Game registro){
+    Nodo(int seg, Game registro) {
         segmento = seg;
         jogo = registro;
     }
 
-    public int filhoEsquerdo(int i){
-        return (i*2+1);
+    public int filhoEsquerdo(int i) {
+        return (i * 2 + 1);
     }
 
-    public int filhoDireito(int i){
-        return (i*2+2);
+    public int filhoDireito(int i) {
+        return (i * 2 + 2);
     }
 
-    public int pai(int i){
-        return (int) ((i-1)/2);
+    public int pai(int i) {
+        return (int) ((i - 1) / 2);
     }
 }
 
-//Classe para ordenação por intercalação
+// Classe para ordenação por intercalação
 class Intercalacao {
     // construtor
     Intercalacao() {
@@ -372,17 +372,17 @@ class Intercalacao {
                     title1 = bloco1.get(j).getTitle();
                     title2 = bloco2.get(j).getTitle();
 
-                    if(j == 0){
+                    if (j == 0) {
                         menor1 = menor2 = -2;
                     }
 
-                    if(title1.compareTo(title2) == -1){
-                        arranjo1 = (menor1 == j-1) ? bloco1.get(menor1).toByte(): bloco1.get(j).toByte();
+                    if (title1.compareTo(title2) == -1) {
+                        arranjo1 = (menor1 == j - 1) ? bloco1.get(menor1).toByte() : bloco1.get(j).toByte();
                         destino.writeInt(arranjo1.length);
                         destino.write(arranjo1);
                         menor2 = j;
-                    }else{
-                        arranjo2 = (menor2 == j-1) ? bloco2.get(menor2).toByte(): bloco2.get(j).toByte();
+                    } else {
+                        arranjo2 = (menor2 == j - 1) ? bloco2.get(menor2).toByte() : bloco2.get(j).toByte();
                         destino.writeInt(arranjo2.length);
                         destino.write(arranjo2);
                         menor1 = j;
@@ -402,51 +402,51 @@ class Intercalacao {
 
     }
 
-    
-
-    public void heap()throws FileNotFoundException, IOException{
+    public void heap() throws FileNotFoundException, IOException {
         // abrindo arquivo da base de dados
         RandomAccessFile arq = new RandomAccessFile("gamees.bin", "rw");
 
         // arquivos que serão utilizados para a intercalação
         RandomAccessFile temp1 = new RandomAccessFile("temp1.bin", "rw");
         RandomAccessFile temp2 = new RandomAccessFile("temp2.bin", "rw");
-        RandomAccessFile destino = new RandomAccessFile("temp3.bin", "rw");
+        RandomAccessFile destino;
 
         ArrayList<Nodo> lista = new ArrayList<Nodo>(6);
 
         byte[] bytes;
         int tam = 0, segmento = 0, antseg = 0;
-        Game jogo = new Game();
-        Nodo no = new Nodo(), pos0 = new Nodo(), pos1 = new Nodo(), pos2 = new Nodo(), pos3 = new Nodo(), pos4 = new Nodo(), pos5 = new Nodo();
-        String titulo1, titulo2;
+        Game jogo = new Game(), ultJogo = new Game();
+        Nodo no = new Nodo(), pos0 = new Nodo(), pos1 = new Nodo(), pos2 = new Nodo(),
+                pos3 = new Nodo(), pos4 = new Nodo(), pos5 = new Nodo(), pos6 = new Nodo();
 
-        for(int i = 0; i < arq.length(); i++){
+        for (int i = 0; i < arq.length(); i++) {
             if (antseg == segmento) {
-                temp1 = new RandomAccessFile("temp1.bin", "rw");
-                temp2 = new RandomAccessFile("temp2.bin", "rw");
-                destino = new RandomAccessFile("temp3.bin", "rw");
-            } else {
-                temp1 = new RandomAccessFile("temp2.bin", "rw");
-                temp2 = new RandomAccessFile("temp3.bin", "rw");
                 destino = new RandomAccessFile("temp1.bin", "rw");
+            } else {
+                destino = new RandomAccessFile("temp2.bin", "rw");
             }
 
-            if(i < 6){
+            if (i < 7) {
                 tam = arq.readInt();
                 bytes = new byte[tam];
                 arq.read(bytes);
                 jogo.fromByte(bytes);
                 no = new Nodo(segmento, jogo);
                 lista.add(no);
-            }else{
-                pos0 = lista.get(0); pos1 = lista.get(1); pos2 = lista.get(2);
-                pos3 = lista.get(3); pos4 = lista.get(4); pos5 = lista.get(5);
+            } else {
+                pos0 = lista.get(0);
+                pos1 = lista.get(1);
+                pos2 = lista.get(2);
+                pos3 = lista.get(3);
+                pos4 = lista.get(4);
+                pos5 = lista.get(5);
+                pos6 = lista.get(6);
 
                 bytes = pos0.jogo.toByte();
+                ultJogo = pos0.jogo;
                 destino.writeInt(bytes.length);
                 destino.write(bytes);
-                
+
                 tam = arq.readInt();
                 bytes = new byte[tam];
                 arq.read(bytes);
@@ -455,7 +455,7 @@ class Intercalacao {
 
                 lista.add(0, no);
 
-                if(pos0.jogo.getTitle().compareTo(pos1.jogo.getTitle()) == 1){
+                if (pos0.jogo.getTitle().compareTo(pos1.jogo.getTitle()) == 1) {
                     Nodo noTemp = new Nodo();
                     noTemp = pos1;
                     pos1.segmento = pos0.segmento;
@@ -463,35 +463,145 @@ class Intercalacao {
 
                     pos0 = noTemp;
 
-                    
-                    if(pos1.jogo.getTitle().compareTo(pos3.jogo.getTitle()) == 1){
+                    if (pos1.jogo.getTitle().compareTo(pos3.jogo.getTitle()) == 1) {
                         noTemp = pos1;
                         pos1.segmento = pos3.segmento;
                         pos1.jogo = pos3.jogo;
 
                         pos3 = noTemp;
-                    }else if(/*teste para posicao 1 com 4 */){
+                    } else if (pos1.jogo.getTitle().compareTo(pos4.jogo.getTitle()) == 1) {
+                        noTemp = pos1;
+                        pos1.segmento = pos4.segmento;
+                        pos1.jogo = pos4.jogo;
 
+                        pos4 = noTemp;
+                    } else if (pos1.segmento > pos3.segmento) {
+                        noTemp = pos1;
+                        pos1.segmento = pos3.segmento;
+                        pos1.jogo = pos3.jogo;
+
+                        pos3 = noTemp;
+                    } else if (pos1.segmento > pos4.segmento) {
+                        noTemp = pos1;
+                        pos1.segmento = pos4.segmento;
+                        pos1.jogo = pos4.jogo;
+
+                        pos4 = noTemp;
                     }
 
-                }else if(/*teste para posicao 0 com 2 */){
+                } else if (pos0.jogo.getTitle().compareTo(pos2.jogo.getTitle()) == 1) {
                     Nodo noTemp = new Nodo();
-                    noTemp = pos1;
-                    pos1.segmento = pos0.segmento;
-                    pos1.jogo = pos0.jogo;
+                    noTemp = pos2;
+                    pos2.segmento = pos0.segmento;
+                    pos2.jogo = pos0.jogo;
 
                     pos0 = noTemp;
 
-                    
-                    if(/*pos2 com 5 */){
-                        noTemp = pos1;
-                        pos1.segmento = pos3.segmento;
-                        pos1.jogo = pos3.jogo;
+                    if (pos2.jogo.getTitle().compareTo(pos5.jogo.getTitle()) == 1) {
+                        noTemp = pos2;
+                        pos2.segmento = pos5.segmento;
+                        pos2.jogo = pos5.jogo;
 
-                        pos3 = noTemp;
-                    }else if(/*teste para posicao 2 com 6 */){
+                        pos5 = noTemp;
+                    } else if (pos2.jogo.getTitle().compareTo(pos6.jogo.getTitle()) == 1) {
+                        noTemp = pos2;
+                        pos2.segmento = pos6.segmento;
+                        pos2.jogo = pos6.jogo;
 
+                        pos6 = noTemp;
+                    }else if(pos2.segmento > pos5.segmento){
+                        noTemp = pos2;
+                        pos2.segmento = pos5.segmento;
+                        pos2.jogo = pos5.jogo;
+
+                        pos5 = noTemp;
+                    }else if(pos2.segmento > pos6.segmento){
+                        noTemp = pos2;
+                        pos2.segmento = pos6.segmento;
+                        pos2.jogo = pos6.jogo;
+
+                        pos6 = noTemp;
                     }
+                }
+
+                if(pos0.jogo.getTitle().compareTo(ultJogo.getTitle()) == - 1){
+                    antseg = segmento;
+                    segmento = segmento + 1;
+                    pos0.segmento = segmento;
+
+                    if (pos0.jogo.getTitle().compareTo(pos1.jogo.getTitle()) == 1) {
+                        Nodo noTemp = new Nodo();
+                        noTemp = pos1;
+                        pos1.segmento = pos0.segmento;
+                        pos1.jogo = pos0.jogo;
+    
+                        pos0 = noTemp;
+    
+                        if (pos1.jogo.getTitle().compareTo(pos3.jogo.getTitle()) == 1) {
+                            noTemp = pos1;
+                            pos1.segmento = pos3.segmento;
+                            pos1.jogo = pos3.jogo;
+    
+                            pos3 = noTemp;
+                        } else if (pos1.jogo.getTitle().compareTo(pos4.jogo.getTitle()) == 1) {
+                            noTemp = pos1;
+                            pos1.segmento = pos4.segmento;
+                            pos1.jogo = pos4.jogo;
+    
+                            pos4 = noTemp;
+                        } else if (pos1.segmento > pos3.segmento) {
+                            noTemp = pos1;
+                            pos1.segmento = pos3.segmento;
+                            pos1.jogo = pos3.jogo;
+    
+                            pos3 = noTemp;
+                        } else if (pos1.segmento > pos4.segmento) {
+                            noTemp = pos1;
+                            pos1.segmento = pos4.segmento;
+                            pos1.jogo = pos4.jogo;
+    
+                            pos4 = noTemp;
+                        }
+    
+                    } else if (pos0.jogo.getTitle().compareTo(pos2.jogo.getTitle()) == 1) {
+                        Nodo noTemp = new Nodo();
+                        noTemp = pos2;
+                        pos2.segmento = pos0.segmento;
+                        pos2.jogo = pos0.jogo;
+    
+                        pos0 = noTemp;
+    
+                        if (pos2.jogo.getTitle().compareTo(pos5.jogo.getTitle()) == 1) {
+                            noTemp = pos2;
+                            pos2.segmento = pos5.segmento;
+                            pos2.jogo = pos5.jogo;
+    
+                            pos5 = noTemp;
+                        } else if (pos2.jogo.getTitle().compareTo(pos6.jogo.getTitle()) == 1) {
+                            noTemp = pos2;
+                            pos2.segmento = pos6.segmento;
+                            pos2.jogo = pos6.jogo;
+    
+                            pos6 = noTemp;
+                        }else if(pos2.segmento > pos5.segmento){
+                            noTemp = pos2;
+                            pos2.segmento = pos5.segmento;
+                            pos2.jogo = pos5.jogo;
+    
+                            pos5 = noTemp;
+                        }else if(pos2.segmento > pos6.segmento){
+                            noTemp = pos2;
+                            pos2.segmento = pos6.segmento;
+                            pos2.jogo = pos6.jogo;
+    
+                            pos6 = noTemp;
+                        }
+                    }
+                }else{
+                    bytes = pos0.jogo.toByte();
+                    ultJogo = pos0.jogo;
+                    destino.writeInt(bytes.length);
+                    destino.write(bytes);
                 }
 
             }
@@ -500,6 +610,5 @@ class Intercalacao {
         arq.close();
         temp1.close();
         temp2.close();
-        destino.close();
     }
 }
