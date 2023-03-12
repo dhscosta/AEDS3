@@ -623,36 +623,3 @@ class Intercalacao {
         temp2.close();
     }
 }
-
-/*System.out.println(j);
-                    indice1 = arq1.getFilePointer();
-                    indice2 = arq2.getFilePointer();
-
-                    tam1 = arq1.readInt();
-                    tam2 = arq2.readInt();
-
-                    byte[] tester = new byte[tam1];
-                    arq1.read(tester);
-                    teste.fromByte(tester);
-                    title1 = teste.getTitle();
-
-                    byte[] tester2 = new byte[tam2];
-                    arq2.read(tester2);
-                    teste2.fromByte(tester2);
-                    title2 = teste2.getTitle();
-
-                    if (title1.compareTo(title2) == -1) {
-                        arq1.seek(indice1);
-                        arranjoByte = new byte[tam1];
-                        arq1.read(arranjoByte);
-
-                        destino.writeInt(tam1);
-                        destino.write(arranjoByte);
-                    } else {
-                        arq2.seek(indice2);
-                        arranjoByte = new byte[tam2];
-                        arq2.read(arranjoByte);
-
-                        destino.writeInt(tam1);
-                        destino.write(arranjoByte);
-                    } */
