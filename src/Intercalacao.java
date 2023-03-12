@@ -266,9 +266,6 @@ class Intercalacao {
         byte[] arranjoByte; // arranjo de bytes para armazenar registro
         int arquivos = 1;
 
-        int tamArq1 = 0;
-        int tamArq2 = 0;
-
         // etapa de distribuição
         while (arq.getFilePointer() < arq.length()) {
 
@@ -300,12 +297,10 @@ class Intercalacao {
                     arranjoByte = jogos[i].toByte();
                     temp1.writeInt(arranjoByte.length);
                     temp1.write(arranjoByte);
-                    tamArq1++;
                 } else if (jogos[i].getId() != -1) {
                     arranjoByte = jogos[i].toByte();
                     temp2.writeInt(arranjoByte.length);
                     temp2.write(arranjoByte);
-                    tamArq2++;
                 }
             }
 
@@ -598,9 +593,29 @@ class Intercalacao {
         long maior = (temp1.length() > temp2.length()) ? temp1.length(): temp2.length();
         long i1, i2;
         Nodo no1 = new Nodo(), no2 = new Nodo();
+        int tam1, tam2, seg1, seg2;
+        Game teste = new Game(), teste2 = new Game();
+        String title1, title2;
 
         for(int i = 0; i < maior; i++){
-            
+            i1 = temp1.getFilePointer();
+            i2 = temp2.getFilePointer();
+
+            seg1 = temp1.readInt();
+            seg2 = temp2.readInt();
+
+            tam1 = temp1.readInt();
+            tam2 = temp2.readInt();
+
+            byte[] tester = new byte[tam1];
+            temp1.read(tester);
+            teste.fromByte(tester);
+            title1 = teste.getTitle();
+
+            byte[] tester2 = new byte[tam2];
+            temp2.read(tester2);
+            teste2.fromByte(tester2);
+            title2 = teste2.getTitle();
         }
 
         arq.close();
@@ -608,3 +623,36 @@ class Intercalacao {
         temp2.close();
     }
 }
+
+/*System.out.println(j);
+                    indice1 = arq1.getFilePointer();
+                    indice2 = arq2.getFilePointer();
+
+                    tam1 = arq1.readInt();
+                    tam2 = arq2.readInt();
+
+                    byte[] tester = new byte[tam1];
+                    arq1.read(tester);
+                    teste.fromByte(tester);
+                    title1 = teste.getTitle();
+
+                    byte[] tester2 = new byte[tam2];
+                    arq2.read(tester2);
+                    teste2.fromByte(tester2);
+                    title2 = teste2.getTitle();
+
+                    if (title1.compareTo(title2) == -1) {
+                        arq1.seek(indice1);
+                        arranjoByte = new byte[tam1];
+                        arq1.read(arranjoByte);
+
+                        destino.writeInt(tam1);
+                        destino.write(arranjoByte);
+                    } else {
+                        arq2.seek(indice2);
+                        arranjoByte = new byte[tam2];
+                        arq2.read(arranjoByte);
+
+                        destino.writeInt(tam1);
+                        destino.write(arranjoByte);
+                    } */
