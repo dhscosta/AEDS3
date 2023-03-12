@@ -5,7 +5,7 @@ import com.opencsv.*;
 
 public class App
 {
-
+    //funcao para mostrar a interface do CRUD
     public static void printInterface()
     {
         System.out.println("-----------INTERFACE-----------");
@@ -29,6 +29,7 @@ public class App
         
         printInterface();
 
+        //cria um crud
         Crud crud = new Crud();
         int x = 0;
         System.out.print("Insira a opção que deseja executar: ");
@@ -38,7 +39,7 @@ public class App
             switch(x)
             {
                 case 1:
-                    
+                    //carga inicial dos dados do csv
                     while((line = csv.readNext()) != null)
                     {
                         crud.create(line);
@@ -49,14 +50,16 @@ public class App
                     
                     
                 break;
-                
+
                 case 2:
+                    //pesquisa por um id
                     System.out.println("Insira o id do jogo que será pesquisado: ");
                     int pesqId = ler.nextInt();
                     crud.read(pesqId);
                 break;
 
                 case 3:
+                    //update do registro passando os novos parametros e o id do registro que será trocado
                     System.out.println("Insira todos os campos do registro, mesmo os que não forem alterados");
                     int iden;
                     do{
@@ -92,6 +95,7 @@ public class App
                 break;
 
                 case 4:
+                    //deleta um registro
                     int identificador;
                     do{
                         System.out.println("Insira o id do jogo que será deletado: ");
@@ -101,6 +105,7 @@ public class App
                 break;
 
                 case 5:
+                    //mostra todos os registros no momento
                     crud.mostrarTodos();
                     System.out.println("Aperte ENTER para continuar");
                     ler.nextLine();
@@ -115,43 +120,3 @@ public class App
         ler.close();
     }
 }
-
-/*while((line = csv.readNext()) != null)
-{
-    SimpleDateFormat fDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    Game game = new Game();
-    game.setId(Integer.parseInt(line[0]));
-    game.setTitle(line[1]);
-    game.setData(fDateFormat.parse(line[2]));
-    game.setWin(Boolean.parseBoolean(line[3]));
-    game.setMac(Boolean.parseBoolean(line[4]));
-    game.setLinux(Boolean.parseBoolean(line[5]));
-    game.boolToArray();                                 //transforma os 3 booleanos em um arranjo de String
-    game.toSigla(line[6]);                              //transforma a string da avaliaçao em uma sigla de 2 digitos 
-    game.setPrice(Float.parseFloat(line[9]));
-
-    //apenas pra verificar os parses
-    game.mostrar();
-
-    //transforma em um arranjo de bytes e escreve no arquivo (create)
-    b = game.toByte();
-    arq.writeInt(b.length);
-    arq.write(b);
-    y++; //numero de registros
-}
-
-int z = 0;
-arq.seek(0);
-
-while(z < y)
-{
-    int tam = arq.readInt();
-    byte[] c = new byte[tam];
-    arq.read(c);
-    Game gamer = new Game();
-    gamer.fromByte(c);
-    gamer.mostrar();
-    z++;
-}
-
-arq.close();*/

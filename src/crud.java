@@ -11,11 +11,16 @@ class Crud{
     //atributos da classe
     private int identificador;          
     
+    //construtor
     public Crud() throws FileNotFoundException
     {
         this.identificador = 0;
     }
 
+    /*mostrarTodos - Método para mostrar todos os registros do arquivo
+     *Parâmetros - nenhum
+     *Retorno - void
+    */
     public void mostrarTodos() throws Exception
     {
         //declaração de variáveis

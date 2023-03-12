@@ -16,6 +16,18 @@ class Nodo{
         segmento = seg;
         jogo = registro;
     }
+
+    public int filhoEsquerdo(int i){
+        return (i*2+1);
+    }
+
+    public int filhoDireito(int i){
+        return (i*2+2);
+    }
+
+    public int pai(int i){
+        return (int) ((i-1)/2);
+    }
 }
 
 //Classe para ordenação por intercalação
@@ -390,17 +402,7 @@ class Intercalacao {
 
     }
 
-    private int filhoEsquerdo(int i){
-        return (i*2+1);
-    }
-
-    private int filhoDireito(int i){
-        return (i*2+2);
-    }
-
-    private int pai(int i){
-        return (int) ((i-1)/2);
-    }
+    
 
     public void heap()throws FileNotFoundException, IOException{
         // abrindo arquivo da base de dados
@@ -414,24 +416,20 @@ class Intercalacao {
         ArrayList<Nodo> lista = new ArrayList<Nodo>(6);
 
         byte[] bytes;
-        int tam = 0, segmento = 0;
+        int tam = 0, segmento = 0, antseg = 0;
         Game jogo = new Game();
-        Nodo no = new Nodo();
+        Nodo no = new Nodo(), pos0 = new Nodo(), pos1 = new Nodo(), pos2 = new Nodo(), pos3 = new Nodo(), pos4 = new Nodo(), pos5 = new Nodo();
         String titulo1, titulo2;
 
         for(int i = 0; i < arq.length(); i++){
-            if (i == 0) {
+            if (antseg == segmento) {
                 temp1 = new RandomAccessFile("temp1.bin", "rw");
                 temp2 = new RandomAccessFile("temp2.bin", "rw");
                 destino = new RandomAccessFile("temp3.bin", "rw");
-
-                
             } else {
                 temp1 = new RandomAccessFile("temp2.bin", "rw");
                 temp2 = new RandomAccessFile("temp3.bin", "rw");
                 destino = new RandomAccessFile("temp1.bin", "rw");
-
-                
             }
 
             if(i < 6){
@@ -442,14 +440,59 @@ class Intercalacao {
                 no = new Nodo(segmento, jogo);
                 lista.add(no);
             }else{
-                bytes = lista.get(0).jogo.toByte();
-                //destino
+                pos0 = lista.get(0); pos1 = lista.get(1); pos2 = lista.get(2);
+                pos3 = lista.get(3); pos4 = lista.get(4); pos5 = lista.get(5);
+
+                bytes = pos0.jogo.toByte();
+                destino.writeInt(bytes.length);
+                destino.write(bytes);
                 
                 tam = arq.readInt();
                 bytes = new byte[tam];
                 arq.read(bytes);
                 jogo.fromByte(bytes);
+                pos0 = new Nodo(segmento, jogo);
 
+                lista.add(0, no);
+
+                if(pos0.jogo.getTitle().compareTo(pos1.jogo.getTitle()) == 1){
+                    Nodo noTemp = new Nodo();
+                    noTemp = pos1;
+                    pos1.segmento = pos0.segmento;
+                    pos1.jogo = pos0.jogo;
+
+                    pos0 = noTemp;
+
+                    
+                    if(pos1.jogo.getTitle().compareTo(pos3.jogo.getTitle()) == 1){
+                        noTemp = pos1;
+                        pos1.segmento = pos3.segmento;
+                        pos1.jogo = pos3.jogo;
+
+                        pos3 = noTemp;
+                    }else if(/*teste para posicao 1 com 4 */){
+
+                    }
+
+                }else if(/*teste para posicao 0 com 2 */){
+                    Nodo noTemp = new Nodo();
+                    noTemp = pos1;
+                    pos1.segmento = pos0.segmento;
+                    pos1.jogo = pos0.jogo;
+
+                    pos0 = noTemp;
+
+                    
+                    if(/*pos2 com 5 */){
+                        noTemp = pos1;
+                        pos1.segmento = pos3.segmento;
+                        pos1.jogo = pos3.jogo;
+
+                        pos3 = noTemp;
+                    }else if(/*teste para posicao 2 com 6 */){
+
+                    }
+                }
 
             }
         }

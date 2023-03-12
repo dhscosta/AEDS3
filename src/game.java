@@ -59,7 +59,10 @@ class Game {
     }
     
 
-    //metodo para transformar os valores booleanos (win,mac,linus) em um arranjo de string
+    /*boolToArray - Método para formatar resultados booleanos em um array de strings
+     *Parâmetros - void
+     *Retorno - void
+    */
     public void boolToArray() {
 
         if(this.win == false)    {plataformas.add("false");} 
@@ -72,14 +75,22 @@ class Game {
         else                    {plataformas.add("true");}
     
     }
-
+    
+    /*mostrar - Método para mostrar um registro inteiro
+     *Parâmetros - void
+     *Retorno - void
+    */
     public void mostrar()
     {
 
         System.out.println(g_id + " , " + title + " , " + data + " , " + plataformas + " , " + rating + " , " + price);
 
     }
-    //transforma as avaliacoes de usuarios em siglas de tamanho fixo
+
+     /*toSigla - Método para formatar strings de avaliação em siglas de tamanho fixo(2)
+     *Parâmetros - String s 
+     *Retorno - void
+    */
     public void toSigla(String s) 
     {
         if      (s.compareTo("Very Positive") == 0)   {setRating("VP");}
@@ -89,6 +100,10 @@ class Game {
         else    {setRating("ER");}
     }
 
+    /*toSigla - Método para clonar um objeto game
+     *Parâmetros - void
+     *Retorno - Objeto Game
+    */
     public Game clone ()
     {
         Game game = new Game();
@@ -105,7 +120,10 @@ class Game {
         return game;
     }
 
-    //retorna um arranjo de bytes com os valores do game (registro)
+    /*toByte - Método para transformar um objeto em um arranjo de bytes para ser escrito em arquivo(registro)
+     *Parâmetros - void 
+     *Retorno - byte[], que será usado para ser escrito no arquivo
+    */
     public byte[] toByte() throws IOException{
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -126,7 +144,10 @@ class Game {
         return baos.toByteArray();
     }
 
-    //lê um registro e transforma em um objeto (game)
+    /*toByte - Método para transformar um registro de bytes em um objeto
+     *Parâmetros - byte[], arranjo de bytes lido do arquivo 
+     *Retorno - void
+    */
     public void fromByte(byte ba[]) throws IOException{
 
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
