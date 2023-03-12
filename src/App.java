@@ -16,7 +16,9 @@ public class App
         System.out.println("3 - Atualizar um registro de um jogo (update)");
         System.out.println("4 - Apagar um registro de jogo (delete)");
         System.out.println("5 - Mostrar todos os registros do arquivo");
-        System.out.println("6 - ");
+        System.out.println("6 - Ordenação por intercalação balanceada comum ");
+        System.out.println("7 - Ordenação por intercalação balanceada variavel");
+        System.out.println("8 - Ordenação por intercalação com seleção");
     }
     public static void main(String[] args) throws Exception {
 
@@ -111,6 +113,15 @@ public class App
                     System.out.println("Aperte ENTER para continuar");
                     ler.nextLine();
                     ler.nextLine();
+                break;
+
+                case 6:
+                break;
+
+                case 7:
+                break;
+
+                case 8:
                 break;
             }
             printInterface();
