@@ -15,6 +15,8 @@ class Crud{
         this.identificador = 0;
     }
 
+    public int getIdentificador(){return this.identificador;}
+
     /*mostrarTodos - Método para mostrar todos os registros do arquivo
      *Parâmetros - nenhum
      *Retorno - void
@@ -47,7 +49,6 @@ class Crud{
         arq.close();
     }
 
-    public int getIdentificador(){return this.identificador;}
 
     /*format - Método para formatar cadeia de Strings, na forma que será usada nos registros do arquivo
      *Parâmetros - String[] line - Arranjo de Strings, obtido a partir da leitura do arquivo csv

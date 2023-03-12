@@ -27,7 +27,6 @@ public class App
         Scanner ler = new Scanner(System.in);
 
         //lê a primeira linha que informa o nome dos valores
-        csv.readNext();
         String[] line;
         
         printInterface();
@@ -116,9 +115,13 @@ public class App
                 break;
 
                 case 6:
+                    Intercalacao intercalacao = new Intercalacao();
+                    intercalacao.balanceadaComum();
                 break;
 
                 case 7:
+                    Intercalacao intercalacaoVariavel = new Intercalacao();
+                    intercalacaoVariavel.balanceadaVariavel();
                 break;
 
                 case 8:

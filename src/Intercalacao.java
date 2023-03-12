@@ -44,6 +44,7 @@ class Intercalacao {
     private int ordena(Game[] vetor, int inicio, int fim) {
         Game pivo = vetor[inicio];
         int i = inicio + 1, f = fim;
+
         while (i <= f) {
             if (vetor[i].getTitle().compareTo(pivo.getTitle()) == 0
                     || vetor[i].getTitle().compareTo(pivo.getTitle()) == -1)
@@ -118,6 +119,7 @@ class Intercalacao {
                     } else {
                         arranjoByte = new byte[tam];
                         arq.read(arranjoByte);
+                        jogos[i] = new Game();
                         jogos[i].fromByte(arranjoByte);
                     }
                 } else {
@@ -127,6 +129,12 @@ class Intercalacao {
 
             // ordenação do arranjo de Games
             quickSort(jogos, 0, jogos.length - 1);
+
+            // testar se esta ordenado
+            for (int z = 0; z < jogos.length; z++)
+            {
+                jogos[z].mostrar();
+            }
 
             // iteração para registrar bloco no arquivo temporário
             for (int i = 0; i < nRegistros; i++) {
@@ -156,6 +164,8 @@ class Intercalacao {
         String title1, title2;
         int tam1, tam2, opcao = 0, option = 0;
         RandomAccessFile arq1, arq2, arq3, arq4, destino;
+        Game teste = new Game();
+        Game teste2 = new Game();
 
         while (nRegistros < arq.length()) {
             if (option == 0) {
@@ -191,8 +201,15 @@ class Intercalacao {
                     tam1 = arq1.readInt();
                     tam2 = arq2.readInt();
 
-                    title1 = arq1.readUTF();
-                    title2 = arq2.readUTF();
+                    byte[] tester = new byte[tam1];
+                    arq1.read(tester);
+                    teste.fromByte(tester);
+                    title1 = teste.getTitle();
+
+                    byte[] tester2 = new byte[tam2];
+                    arq2.read(tester2);
+                    teste2.fromByte(tester2);
+                    title2 = teste2.getTitle();
 
                     if (title1.compareTo(title2) == -1) {
                         arq1.seek(indice1);
@@ -266,6 +283,7 @@ class Intercalacao {
                     } else {
                         arranjoByte = new byte[tam];
                         arq.read(arranjoByte);
+                        jogos[i] = new Game();
                         jogos[i].fromByte(arranjoByte);
                     }
                 } else {
@@ -300,7 +318,7 @@ class Intercalacao {
         }
 
         long indice1, indice2;
-        int maior = (tamArq1 > tamArq2) ? tamArq1 : tamArq2;
+        long maior = (temp1.length() > temp2.length()) ? temp1.length() : temp2.length();
         int tam1, tam2, opcao = 0, option = 0, maior2, menor1 = 0, menor2 = 0;
         String title1, title2;
         byte[] arranjo1, arranjo2;
@@ -334,8 +352,8 @@ class Intercalacao {
                     opcao = 0;
                 }
 
-                ArrayList<Game> bloco1 = new ArrayList<Game>();
-                ArrayList<Game> bloco2 = new ArrayList<Game>();
+                ArrayList<Game> bloco1 = new ArrayList<Game>(nRegistros);
+                ArrayList<Game> bloco2 = new ArrayList<Game>(nRegistros);
 
                 if (i < nRegistros) {
                     tam1 = arq1.readInt();
@@ -365,14 +383,14 @@ class Intercalacao {
                     arq2.read(arranjo2);
 
                     gamer.fromByte(arranjo1);
-                    if (gamer.getTitle().compareTo(bloco1.get(bloco1.size() - 1).getTitle()) == 1) {
+                    if (gamer.getTitle().compareTo(bloco1.get(bloco1.size()).getTitle()) == 1) {
                         bloco1.add(gamer);
                     } else {
                         arq1.seek(indice1);
                     }
 
                     gamer.fromByte(arranjo2);
-                    if (gamer.getTitle().compareTo(bloco2.get(bloco2.size() - 1).getTitle()) == 1) {
+                    if (gamer.getTitle().compareTo(bloco2.get(bloco2.size()).getTitle()) == 1) {
                         bloco2.add(gamer);
                     } else {
                         arq2.seek(indice2);
