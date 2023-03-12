@@ -16,6 +16,7 @@ public class App
         System.out.println("3 - Atualizar um registro de um jogo (update)");
         System.out.println("4 - Apagar um registro de jogo (delete)");
         System.out.println("5 - Mostrar todos os registros do arquivo");
+        System.out.println("6 - ");
     }
     public static void main(String[] args) throws Exception {
 
