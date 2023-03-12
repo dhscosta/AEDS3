@@ -37,7 +37,10 @@ class Intercalacao {
 
     }
 
-    // Método para ordenar a partição o vetor. Este método é usado para o quickSort
+    /*ordena - Método para ordenar a partição o vetor. Este método é usado para o quickSort
+     *Parâmetros - Game[], int inicio, int fim - arranjo de games, posicao inicial e final
+     *Retorno - int
+    */
     private int ordena(Game[] vetor, int inicio, int fim) {
         Game pivo = vetor[inicio];
         int i = inicio + 1, f = fim;
@@ -48,6 +51,7 @@ class Intercalacao {
             else if (pivo.getTitle().compareTo(vetor[f].getTitle()) == -1)
                 f--;
             else {
+                //swap
                 Game troca = vetor[i];
                 vetor[i] = vetor[f];
                 vetor[f] = troca;
@@ -60,7 +64,10 @@ class Intercalacao {
         return f;
     }
 
-    // função para fazer as partições e executar a ordenação
+     /*quickSort - Método para fazer as partições e fazer a ordenação
+     *Parâmetros - Game[], int inicio, int fim - arranjo de games, posicao inicial e final
+     *Retorno - void
+    */
     private void quickSort(Game[] vetor, int inicio, int fim) {
         if (inicio < fim) {
             int posicaoPivo = ordena(vetor, inicio, fim);
@@ -69,7 +76,10 @@ class Intercalacao {
         }
     }
 
-    // Método de intercalação balanceada comum
+     /*balanceadaComum - Método de intercalação balanceada comum
+     *Parâmetros -void
+     *Retorno - void
+    */
     public void balanceadaComum() throws FileNotFoundException, IOException {
         // abrindo arquivo da base de dados
         RandomAccessFile arq = new RandomAccessFile("gamees.bin", "rw");
@@ -214,7 +224,10 @@ class Intercalacao {
 
     }
 
-    // Método de intercalação balanceada comum
+    /*balanceadaVariavel - Método de intercalação balanceada variavel
+     *Parâmetros -void
+     *Retorno - void
+    */
     public void balanceadaVariavel() throws FileNotFoundException, IOException {
         // abrindo arquivo da base de dados
         RandomAccessFile arq = new RandomAccessFile("gamees.bin", "rw");
@@ -402,6 +415,10 @@ class Intercalacao {
 
     }
 
+    /*heap - Método de intercalação por substituição
+     *Parâmetros -void
+     *Retorno - void
+    */
     public void heap() throws FileNotFoundException, IOException {
         // abrindo arquivo da base de dados
         RandomAccessFile arq = new RandomAccessFile("gamees.bin", "rw");
@@ -412,7 +429,7 @@ class Intercalacao {
         RandomAccessFile destino;
 
         ArrayList<Nodo> lista = new ArrayList<Nodo>(6);
-
+        //inicialização de variaveis
         byte[] bytes;
         int tam = 0, segmento = 0, antseg = 0;
         Game jogo = new Game(), ultJogo = new Game();

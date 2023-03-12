@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.zip.DataFormatException;
 
-//import org.apache.commons.lang3.ArchUtils;
-
 class Crud{
     //atributos da classe
     private int identificador;          
