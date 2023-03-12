@@ -11,7 +11,7 @@ public class App
         System.out.println("-----------INTERFACE-----------");
         System.out.println("----ATENÇÃO----SELECIONAR A OPÇÃO 1 DESFAZ QUALQUER OPERAÇÃO DO CRUD FEITA ANTES");
         System.out.println("0 - Parar a execução");
-        System.out.println("1 - Carregar o arquivo com o os dados do csv (create)");
+        System.out.println("1 - Carregar o arquivo com o os dados do csv (create) - Esse metodo demora um pouco devido ao tamanho da base");
         System.out.println("2 - Ler um registro do arquivo usando o id (read)");
         System.out.println("3 - Atualizar um registro de um jogo (update)");
         System.out.println("4 - Apagar um registro de jogo (delete)");

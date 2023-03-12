@@ -71,8 +71,6 @@ class Crud{
         game.toSigla(line[6]);                              //transforma a string da avaliaçao em uma sigla de 2 digitos 
         game.setPrice(Float.parseFloat(line[9]));
 
-        //apenas pra verificar os parses
-        game.mostrar();
 
         return game;
     }
@@ -177,6 +175,7 @@ class Crud{
                     newGame.setPrice(price);
                     newGame.setData(data);
                     byte[] d = newGame.toByte();
+                    newGame.mostrar();
 
                     if(c.length >= d.length){
                         //se couber no mesmo registro faz um clone do registro atualizado, senao...                        
