@@ -102,8 +102,7 @@ class Intercalacao {
         byte[] arranjoByte; // arranjo de bytes para armazenar registro
         int arquivos = 1;
 
-        int tamArq1 = 0;
-        int tamArq2 = 0;
+        long tamArq1 = 0, tamArq2 = 0;
 
         // etapa de distribuição
         while (arq.getFilePointer() < arq.length()) {
@@ -131,10 +130,10 @@ class Intercalacao {
             quickSort(jogos, 0, jogos.length - 1);
 
             // testar se esta ordenado
-            for (int z = 0; z < jogos.length; z++)
+            /*for (int z = 0; z < jogos.length; z++)
             {
                 jogos[z].mostrar();
-            }
+            }*/
 
             // iteração para registrar bloco no arquivo temporário
             for (int i = 0; i < nRegistros; i++) {
@@ -156,16 +155,16 @@ class Intercalacao {
             } else {
                 arquivos--;
             }
-
         }
 
-        long indice1, indice2;
-        int maior = (tamArq1 > tamArq2) ? tamArq1 : tamArq2;
-        String title1, title2;
-        int tam1, tam2, opcao = 0, option = 0;
+        long maior = (tamArq1 > tamArq2) ? tamArq1 : tamArq2;
+        String title1 = "", title2 = "";
+        int tam1 = 0, tam2 = 0, opcao = 0, option = 0;
         RandomAccessFile arq1, arq2, arq3, arq4, destino;
         Game teste = new Game();
         Game teste2 = new Game();
+        byte[] tester = new byte[0];
+        byte[] tester2 = new byte[0];
 
         while (nRegistros < arq.length()) {
             if (option == 0) {
@@ -195,36 +194,33 @@ class Intercalacao {
                 }
 
                 for (int j = 0; j < nRegistros; j++) {
-                    indice1 = arq1.getFilePointer();
-                    indice2 = arq2.getFilePointer();
 
-                    tam1 = arq1.readInt();
-                    tam2 = arq2.readInt();
+                    if(arq1.getFilePointer() < arq1.length()){
+                        teste = new Game();
+                        tam1 = arq1.readInt();
+                        tester = new byte[tam1];
+                        arq1.read(tester);
+                        teste.fromByte(tester);
+                        teste.mostrar();
+                        title1 = teste.getTitle();
+                    }
 
-                    byte[] tester = new byte[tam1];
-                    arq1.read(tester);
-                    teste.fromByte(tester);
-                    title1 = teste.getTitle();
-
-                    byte[] tester2 = new byte[tam2];
-                    arq2.read(tester2);
-                    teste2.fromByte(tester2);
-                    title2 = teste2.getTitle();
+                    if(arq2.getFilePointer() < arq2.length()){
+                        teste2 = new Game();
+                        tam2 = arq2.readInt();
+                        tester2 = new byte[tam2];
+                        arq2.read(tester2);
+                        teste2.fromByte(tester2);
+                        teste2.mostrar();
+                        title2 = teste2.getTitle();
+                    }
 
                     if (title1.compareTo(title2) == -1) {
-                        arq1.seek(indice1);
-                        arranjoByte = new byte[tam1];
-                        arq1.read(arranjoByte);
-
                         destino.writeInt(tam1);
-                        destino.write(arranjoByte);
+                        destino.write(tester);
                     } else {
-                        arq2.seek(indice2);
-                        arranjoByte = new byte[tam2];
-                        arq2.read(arranjoByte);
-
-                        destino.writeInt(tam1);
-                        destino.write(arranjoByte);
+                        destino.writeInt(tam2);
+                        destino.write(tester2);
                     }
                 }
             }
