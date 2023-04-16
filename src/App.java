@@ -50,7 +50,6 @@ public class App
                     ler.nextLine();
                     ler.nextLine();
                     
-                    
                 break;
 
                 case 2:
@@ -117,6 +116,7 @@ public class App
                 case 6:
                     Intercalacao intercalacao = new Intercalacao();
                     intercalacao.balanceadaComum();
+                    
                 break;
 
                 case 7:

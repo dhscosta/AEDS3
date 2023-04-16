@@ -86,10 +86,15 @@ class Intercalacao {
         RandomAccessFile arq = new RandomAccessFile("gamees.bin", "rw");
 
         // arquivos que serão utilizados para a intercalação
-        RandomAccessFile temp1 = new RandomAccessFile("temp1.bin", "rw");
-        RandomAccessFile temp2 = new RandomAccessFile("temp2.bin", "rw");
-        RandomAccessFile temp3 = new RandomAccessFile("temp3.bin", "rw");
-        RandomAccessFile temp4 = new RandomAccessFile("temp4.bin", "rw");
+        File tempFile1 = File.createTempFile("tempFile1", ".tmp");  
+        File tempFile2 = File.createTempFile("tempFile2", ".tmp");
+        File tempFile3 = File.createTempFile("tempFile3", ".tmp");
+        File tempFile4 = File.createTempFile("tempFile4", ".tmp");
+
+        RandomAccessFile temp1 = new RandomAccessFile(tempFile1, "rw");
+        RandomAccessFile temp2 = new RandomAccessFile(tempFile2, "rw");
+        RandomAccessFile temp3 = new RandomAccessFile(tempFile3, "rw");
+        RandomAccessFile temp4 = new RandomAccessFile(tempFile4, "rw");
 
         // tamanho fixos de registros para bloco
         int nRegistros = 4;
@@ -168,21 +173,19 @@ class Intercalacao {
 
         while (nRegistros < arq.length()) {
             if (option == 0) {
-                arq1 = new RandomAccessFile("temp1.bin", "rw");
-                arq2 = new RandomAccessFile("temp2.bin", "rw");
-                arq3 = new RandomAccessFile("temp3.bin", "rw");
-                arq4 = new RandomAccessFile("temp4.bin", "rw");
-
+                arq1 = temp1; arq1.seek(0);
+                arq2 = temp2; arq2.seek(0);
+                temp3.setLength(0); arq3 = temp3;
+                temp4.setLength(0); arq4 = temp4;
                 option = 1;
             } else {
-                arq1 = new RandomAccessFile("temp3.bin", "rw");
-                arq2 = new RandomAccessFile("temp4.bin", "rw");
-                arq3 = new RandomAccessFile("temp1.bin", "rw");
-                arq4 = new RandomAccessFile("temp2.bin", "rw");
-
+                arq1 = temp3; arq1.seek(0);
+                arq2 = temp4; arq2.seek(0);
+                temp1.setLength(0); arq3 = temp1;
+                temp2.setLength(0); arq4 = temp2;
                 option = 0;
             }
-
+            
             for (int i = 0; i < maior; i++) {
                 if (opcao == 0) {
                     destino = arq3;
@@ -194,14 +197,13 @@ class Intercalacao {
                 }
 
                 for (int j = 0; j < nRegistros; j++) {
-
+                    
                     if(arq1.getFilePointer() < arq1.length()){
                         teste = new Game();
                         tam1 = arq1.readInt();
                         tester = new byte[tam1];
                         arq1.read(tester);
                         teste.fromByte(tester);
-                        teste.mostrar();
                         title1 = teste.getTitle();
                     }
 
@@ -211,7 +213,6 @@ class Intercalacao {
                         tester2 = new byte[tam2];
                         arq2.read(tester2);
                         teste2.fromByte(tester2);
-                        teste2.mostrar();
                         title2 = teste2.getTitle();
                     }
 
@@ -227,14 +228,12 @@ class Intercalacao {
 
             nRegistros *= 2;
         }
-
         // fechamento de arquivos
         arq.close();
         temp1.close();
         temp2.close();
         temp3.close();
         temp4.close();
-
     }
 
     /*balanceadaVariavel - Método de intercalação balanceada variavel
