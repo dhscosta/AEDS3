@@ -49,7 +49,6 @@ public class App
                     ler.nextLine();
                     ler.nextLine();
                     
-                    
                 break;
 
                 case 2:
@@ -114,6 +113,20 @@ public class App
                 break;
 
                 case 6:
+<<<<<<< HEAD
+=======
+                    Intercalacao intercalacao = new Intercalacao();
+                    intercalacao.balanceadaComum();
+                    
+                break;
+
+                case 7:
+                    Intercalacao intercalacaoVariavel = new Intercalacao();
+                    intercalacaoVariavel.balanceadaVariavel();
+                break;
+
+                case 8:
+>>>>>>> 8fe81e726864274edfdaa9fc9104a66fd3b37095
                 break;
             }
             printInterface();
