@@ -31,10 +31,11 @@ public class App
         printInterface();
 
         //cria um crud
-        Crud crud = new Crud();
+        Arvore arv = new Arvore("games.bin");
         int x = 0;
         System.out.print("Insira a opção que deseja executar: ");
         x = ler.nextInt();
+        boolean teste = false;
 
         while(x != 0){
             switch(x)
@@ -43,7 +44,7 @@ public class App
                     //carga inicial dos dados do csv
                     while((line = csv.readNext()) != null)
                     {
-                        crud.create(line);
+                        arv.create(line);
                     }
                     System.out.println("Aperte ENTER para continuar");
                     ler.nextLine();
@@ -52,20 +53,25 @@ public class App
                 break;
 
                 case 2:
+                    Game jogo = new Game();
+                    
                     //pesquisa por um id
                     System.out.println("Insira o id do jogo que será pesquisado: ");
                     int pesqId = ler.nextInt();
-                    crud.read(pesqId);
+                    jogo = arv.read(pesqId).clone();
+
+                    System.out.println("O objeto encontrado foi:");
+                    jogo.mostrar();
                 break;
 
                 case 3:
                     //update do registro passando os novos parametros e o id do registro que será trocado
                     System.out.println("Insira todos os campos do registro, mesmo os que não forem alterados");
                     int iden;
-                    do{
-                        System.out.print("Insira o ID do jogo que sofrerá update: ");
-                        iden = ler.nextInt();
-                    }while(crud.read(iden) == false);
+                    
+                    System.out.print("Insira o ID do jogo que sofrerá update: ");
+                    iden = ler.nextInt();
+                    
 
                     System.out.print("Insira o título do jogo: ");
                     ler.nextLine();
@@ -91,29 +97,38 @@ public class App
                     String stringData = ler.nextLine();
                     Date data = fDateFormat.parse(stringData);
 
-                    crud.update(iden, title, win, mac, linux, rating, price, data);
+                    teste = arv.update(iden, title, win, mac, linux, rating, price, data);
+
+                    if(teste){
+                        System.out.println("Update feito com sucesso");
+                    }else{
+                        System.out.println("Nao foi possível executar o update");
+                    }
+
                 break;
 
                 case 4:
                     //deleta um registro
                     int identificador;
-                    do{
-                        System.out.println("Insira o id do jogo que será deletado: ");
-                        identificador = ler.nextInt();
-                    }while(crud.read(identificador) == false);
-                    crud.delete(identificador);
+                    identificador = ler.nextInt();
+                    teste = arv.delete(identificador);
+
+                    if(teste){
+                        System.out.println("Objeto removido com sucesso");
+                    }else{
+                        System.out.println("Nao foi possivel remover o objeto");
+                    }
+
                 break;
 
-                case 5:
+                /*case 5:
                     //mostra todos os registros no momento
-                    crud.mostrarTodos();
+                    arv.mostrarTodos();
                     System.out.println("Aperte ENTER para continuar");
                     ler.nextLine();
                     ler.nextLine();
-                break;
+                break;*/
 
-                case 6:
-                break;
             }
             printInterface();
             x = ler.nextInt();
