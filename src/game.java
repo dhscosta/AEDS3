@@ -37,12 +37,10 @@ class Game {
     //construtores
     public Game(){
         this.g_id = -1;
-        StringBuilder str = new StringBuilder(80);
-        this.title = new String(str); 
+        this.title = null; 
         this.win = this.mac = this.linux = false;
         this.plataformas = new ArrayList<String>(3);
-        str = new StringBuilder(2);
-        this.rating = new String(str);
+        this.rating = null;
         this.price = -1;
         this.data = null;
     }
