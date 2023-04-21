@@ -41,14 +41,10 @@ public class App
             switch(x)
             {
                 case 1:
-                    int i = 0;
                     //carga inicial dos dados do csv
                     while((line = csv.readNext()) != null)
                     {
-                        System.out.println(i);
-                        i++;
-                        arv.create(line);
-                        
+                        arv.create(line);   
                     }
                     System.out.println("Aperte ENTER para continuar");
                     ler.nextLine();

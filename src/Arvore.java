@@ -13,7 +13,8 @@ class Arvore{
     private long pagAux;
     private boolean split = false;
     private boolean fusao = false;
-    private final int TAMANHO_REGISTRO = 4 + 10 + 3 + 2 + 1 + 4 + 8 + 4;
+    private int TAMANHO_GAME;
+    private final int TAMANHO_REGISTRO = TAMANHO_GAME + 4;
     private final int TAMANHO_PAGINA = 4+(TAMANHO_REGISTRO*maxChaves)+(ordem*8);
 
     /*
@@ -88,7 +89,7 @@ class Arvore{
 
             //variaveis auxiliares para a leitura
             Game jogo = new Game();
-            byte[] ba = new byte[TAMANHO_PAGINA];
+            byte[] ba = new byte[TAMANHO_GAME];
 
             //lê a quantidade de elementos na pagina
             quantidade = in.readInt();
@@ -100,7 +101,7 @@ class Arvore{
                 chaves[i] = in.readInt();
                 in.read(ba);
                 jogo.fromByte(ba);
-                dados[i] = jogo;
+                dados[i] = jogo.clone();
             }
 
             //lê o último filho da página
@@ -144,6 +145,7 @@ class Arvore{
 
     public boolean create(String[] line)throws IOException, DataFormatException, ParseException{
         Game jogo = format(line).clone();
+        TAMANHO_GAME = jogo.toByte().length;
 
         int chave = jogo.getId();
 
