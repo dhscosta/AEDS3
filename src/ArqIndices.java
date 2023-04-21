@@ -1,5 +1,7 @@
 import java.io.*;
-import java.util.Scanner;
+import java.util.*;
+import java.util.zip.DataFormatException;
+import java.text.*;
 
 public class ArqIndices {
 
@@ -12,7 +14,7 @@ public class ArqIndices {
 
     class Bucket {
         private int[] ids;
-        private long[] registros;
+        private Game[] registros;
         private int quantidade;
         private int profundidadeLocal;
     
@@ -24,26 +26,31 @@ public class ArqIndices {
                 throw new Exception("A profundidade máxima é de 10 ");
             }
             this.ids = new int[tamanho];
-            this.registros = new long[tamanho];
+            this.registros = new Game[tamanho];
             this.quantidade = 0;
             this.profundidadeLocal = profundidade;
+            for (int x = 0; x < tamanho; x++)
+            {
+                registros[x] = new Game();
+            }
         }
 
         public byte[] toByteArray() throws IOException {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(baos);
 
+            Game auxGame = new Game();
             dos.writeShort(quantidade);
             dos.writeShort(profundidadeLocal);
             int x=0;
             while(x < quantidade) {
                 dos.writeInt(ids[x]);
-                dos.writeLong(registros[x]);
+                dos.write(registros[x].toByte());
                 x++;
             }
             while(x < 1060) {
                 dos.writeInt(0);
-                dos.writeLong(0);
+                dos.write(auxGame.toByte());
                 x++;
             }
             return baos.toByteArray();            
@@ -53,17 +60,19 @@ public class ArqIndices {
             ByteArrayInputStream bais = new ByteArrayInputStream(ba);
             DataInputStream dis = new DataInputStream(bais);
             quantidade = dis.readShort();
-            profundidadeLocal = dis.readByte();
+            profundidadeLocal = dis.readShort();
 
             int i=0;
             while(i<1060) {
-                ids[i] = dis.readInt();
-                registros[i] = dis.readLong();
+                System.out.println(i);
+                ids[i] = dis.read();
+                dis.read(ba);
+                registros[i].fromByte(ba); 
                 i++;
             }
         }
 
-        public boolean inserir(int y, long reg) throws Exception{
+        public boolean inserir(int newId, Game reg) throws Exception{
             if(quantidade == 1060)
             {
                 return false;
@@ -71,21 +80,21 @@ public class ArqIndices {
 
             int x = quantidade - 1;
 
-            while(x >= 0 && y < ids[x]) {
+            while(x >= 0 && newId < ids[x]) {
                 ids[x+1] = ids[x];
                 registros[x+1] = registros[x];
                 x--;
             }
             x++;
-            ids[x] = y;
+            ids[x] = newId;
             registros[x] = reg;
             quantidade++;
             return true;
         }
     
-        public long buscar(int id) {
+        public Game buscar(int id) {
             if(quantidade == 0){
-                return 0;
+                return null;
             }
 
             int x = 0;
@@ -95,7 +104,7 @@ public class ArqIndices {
                 }
                 x++;
             }
-            return 0;
+            return null;
         }
         
 
@@ -106,9 +115,12 @@ public class ArqIndices {
         private int profundidadeGlobal;
     
         public Diretorio() {
-            this.ends = new long[1];
-            ends[0] = 0;
-            this.profundidadeGlobal = 0;
+            this.profundidadeGlobal = 10;
+            int qnt = (int)Math.pow(2,profundidadeGlobal);
+            this.ends = new long[qnt];
+            for(int x = 0; x < (int)Math.pow(2,profundidadeGlobal); x++){
+                ends[x] = x;
+            }
         }
 
         public byte[] toByteArray() throws IOException {
@@ -149,7 +161,10 @@ public class ArqIndices {
         }
 
         private int hash(int id) {
+            System.out.println(profundidadeGlobal);
+            System.out.println(id);
             return (id % (profundidadeGlobal*2));
+
         }
 
         private int hashLocal(int id, int local){
@@ -181,34 +196,65 @@ public class ArqIndices {
             this.diretorio = new Diretorio();
             fileDir.write(diretorio.toByteArray());
 
-            Bucket buc = new Bucket(tamanhoBuc, 0);
+            Bucket buc = new Bucket(tamanhoBuc, 10);
             fileBuc.seek(0);
             fileBuc.write(buc.toByteArray());
         }
     }
+    
+    /*format - Método para formatar cadeia de Strings, na forma que será usada nos registros do arquivo
+     *Parâmetros - String[] line - Arranjo de Strings, obtido a partir da leitura do arquivo csv
+     *Retorno - Game game - objeto Game
+    */
+    public Game format(String[] line) throws DataFormatException, ParseException{
 
-    public boolean inserir(long registro, int id) throws Exception{
+        //Declaração de variáveis
+        SimpleDateFormat fDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Game game = new Game();                             //variável de retorno
+
+        //Atribuindo os valores de 'line' no objeto
+        game.setId(Integer.parseInt(line[0]));
+        game.setTitle(line[1]);
+        game.setData(fDateFormat.parse(line[2]));
+        game.setWin(Boolean.parseBoolean(line[3]));
+        game.setMac(Boolean.parseBoolean(line[4]));
+        game.setLinux(Boolean.parseBoolean(line[5]));
+        game.boolToArray();                                 //transforma os 3 booleanos em um arranjo de String
+        game.toSigla(line[6]);                              //transforma a string da avaliaçao em uma sigla de 2 digitos 
+        game.setPrice(Float.parseFloat(line[9]));
+
+
+        return game;
+    }
+
+    public void inserir(String[] line) throws Exception{
+        Game jogo = format(line);
+        int id = jogo.getId();
+        inserir(jogo, id);
+    }
+
+    public boolean inserir(Game reg, int id) throws Exception{
+
         int tam = (int)fileDir.length();
         byte[] b = new byte[tam];
         fileDir.seek(0);
         fileDir.read(b);
         diretorio = new Diretorio();
-        diretorio.fromByteArray(b);
+        //diretorio.fromByteArray(b);
         int hash = diretorio.hash(id);
 
         long endBuc = diretorio.getEnd(hash);
-        Bucket buc = new Bucket(1060, 0);
+        Bucket buc = new Bucket(1060, 10);
         byte[] bucByte = new byte[12723];
         fileBuc.seek(endBuc);
         fileBuc.read(bucByte);
-        buc.fromByteArray(bucByte);
-
-        if(buc.buscar(id) != 0){
+        buc.fromByteArray(bucByte); 
+        if(buc.buscar(id) != null){
             throw new Exception("Id repetido");
         }
 
         if(buc.quantidade < 1060){
-            buc.inserir(id, registro);
+            buc.inserir(id, reg);
             fileBuc.seek(endBuc);
             fileBuc.write(buc.toByteArray());
             return true;
@@ -259,13 +305,13 @@ public class ArqIndices {
             for(int x = 0; x < buc.quantidade; x++){
                 inserir(buc.registros[x], buc.ids[x]);
             }
-            inserir(registro, id);
+            inserir(reg,id);
             return false;
 
         }
     }
 
-    public long buscar(int id) throws Exception{
+    public Game buscar(int id) throws Exception{
         byte[] b = new byte[(int)fileDir.length()];
         fileDir.seek(0);
         fileDir.read(b);
@@ -299,7 +345,7 @@ public class ArqIndices {
             fileBuc.seek(0);
             while(fileBuc.getFilePointer() != fileBuc.length()) {
                 Bucket c = new Bucket(1060, 0);
-                byte[] ba = new byte[12723];
+                byte[] ba = new byte[68];
                 fileBuc.read(ba);
                 c.fromByteArray(ba);
                 System.out.println(c);
@@ -308,68 +354,7 @@ public class ArqIndices {
             e.printStackTrace();
         }
     }
-    public static void main(String[] args) {
-                
-                ArqIndices he;
-                Scanner console = new Scanner(System.in);
-            
-                try {
-                    he = new ArqIndices(1060);
-        
-        
-                    int opcao;
-                    do {
-                        System.out.println("\n\n-------------------------------");
-                        System.out.println("              MENU");
-                        System.out.println("-------------------------------");
-                        System.out.println("1 - Inserir");
-                        System.out.println("2 - Buscar");
-                        System.out.println("3 - Excluir");
-                        System.out.println("4 - Imprimir");
-                        System.out.println("0 - Sair");
-                        try {
-                            opcao = Integer.valueOf(console.nextLine());
-                        } catch(NumberFormatException e) {
-                            opcao = -1;
-                        }
-                        
-                        switch(opcao) {
-                            case 1: {
-                                System.out.println("\nINCLUSÃO");
-                                System.out.print("Chave: ");
-                                int chave = Integer.valueOf(console.nextLine());
-                                System.out.print("Dado: ");
-                                long dado = Long.valueOf(console.nextLine());
-                                he.inserir(dado, chave);
-                                he.print();
-                            }break;
-                            case 2: {
-                                System.out.println("\nBUSCA");
-                                System.out.print("Chave: ");
-                                int chave = Integer.valueOf(console.nextLine());
-                                System.out.print("Dado: "+he.buscar(chave));
-                            }break;
-                            /*
-                            case 3: {
-                                System.out.println("\nEXCLUSÃO");
-                                System.out.print("Chave: ");
-                                int chave = Integer.valueOf(console.nextLine());
-                                he.delete(chave);
-                                he.print();
-                            } break;
-                             */
-                            case 4: {
-                                he.print();
-                            } break;
-                            case 0: break;
-                            default: System.out.println("Opção inválida");
-                        }
-                    } while(opcao != 0);
-        
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-            }
+   
 }
     /* 
     public int buscar(int id) {

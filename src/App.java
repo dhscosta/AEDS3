@@ -31,7 +31,8 @@ public class App
         printInterface();
 
         //cria um crud
-        Arvore arv = new Arvore("games.bin");
+       // Arvore arv = new Arvore("games.bin");
+        ArqIndices arqIndices = new ArqIndices(1060);
         int x = 0;
         System.out.print("Insira a opção que deseja executar: ");
         x = ler.nextInt();
@@ -44,7 +45,8 @@ public class App
                     //carga inicial dos dados do csv
                     while((line = csv.readNext()) != null)
                     {
-                        arv.create(line);
+                        //arv.create(line);
+                        arqIndices.inserir(line);
                     }
                     System.out.println("Aperte ENTER para continuar");
                     ler.nextLine();
@@ -58,7 +60,7 @@ public class App
                     //pesquisa por um id
                     System.out.println("Insira o id do jogo que será pesquisado: ");
                     int pesqId = ler.nextInt();
-                    jogo = arv.read(pesqId).clone();
+                    //jogo = arv.read(pesqId).clone();
 
                     System.out.println("O objeto encontrado foi:");
                     jogo.mostrar();
@@ -97,7 +99,7 @@ public class App
                     String stringData = ler.nextLine();
                     Date data = fDateFormat.parse(stringData);
 
-                    teste = arv.update(iden, title, win, mac, linux, rating, price, data);
+                    //teste = arv.update(iden, title, win, mac, linux, rating, price, data);
 
                     if(teste){
                         System.out.println("Update feito com sucesso");
@@ -111,7 +113,7 @@ public class App
                     //deleta um registro
                     int identificador;
                     identificador = ler.nextInt();
-                    teste = arv.delete(identificador);
+                    //teste = arv.delete(identificador);
 
                     if(teste){
                         System.out.println("Objeto removido com sucesso");
