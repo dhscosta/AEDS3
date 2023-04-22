@@ -66,13 +66,13 @@ class Game {
     public void boolToArray() {
 
         if(this.win == false)    {plataformas.add("false");} 
-        else                    {plataformas.add("true");}
+        else                    {plataformas.add("true ");}
 
         if (this.mac == false)   {plataformas.add("false");}
-        else                    {plataformas.add("true");}
+        else                    {plataformas.add("true ");}
 
         if (this.linux == false) {plataformas.add("false");}
-        else                    {plataformas.add("true");}
+        else                    {plataformas.add("true ");}
     
     }
     
