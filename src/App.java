@@ -48,6 +48,7 @@ public class App
                         //arv.create(line);
                         arqIndices.inserir(line);
                     }
+                    arqIndices.print();
                     System.out.println("Aperte ENTER para continuar");
                     ler.nextLine();
                     ler.nextLine();
@@ -61,7 +62,7 @@ public class App
                     System.out.println("Insira o id do jogo que será pesquisado: ");
                     int pesqId = ler.nextInt();
                     //jogo = arv.read(pesqId).clone();
-
+                    jogo = arqIndices.buscar(pesqId);
                     System.out.println("O objeto encontrado foi:");
                     jogo.mostrar();
                 break;

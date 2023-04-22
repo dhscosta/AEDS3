@@ -44,7 +44,7 @@ class Game {
         str = new StringBuilder(2);
         this.rating = new String(str);
         this.price = -1;
-        this.data = null;
+        this.data = new Date();
     }
 
     public Game(int id, String title, boolean win, boolean mac, boolean linux, ArrayList<String> plat, String review, float price, Date data)
@@ -156,7 +156,7 @@ class Game {
         DataInputStream dis = new DataInputStream(bais);
 
         g_id=dis.readInt();
-        title=dis.readUTF();
+            title=dis.readUTF();
         data = new Date(dis.readLong());
         
         for(int x = 0; x < 3; x++)

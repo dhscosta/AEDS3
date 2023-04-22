@@ -31,7 +31,8 @@ public class ArqIndices {
             this.profundidadeLocal = profundidade;
             for (int x = 0; x < tamanho; x++)
             {
-                registros[x] = new Game();
+                registros[x] = new Game(10, "teste", true, true ,true,new ArrayList<String>(3), "Mixed", Float.parseFloat("10.90"), new Date());
+
             }
         }
 
@@ -40,16 +41,20 @@ public class ArqIndices {
             DataOutputStream dos = new DataOutputStream(baos);
 
             Game auxGame = new Game();
+            auxGame.setData(new Date());
             dos.writeShort(quantidade);
             dos.writeShort(profundidadeLocal);
             int x=0;
             while(x < quantidade) {
                 dos.writeInt(ids[x]);
+                System.out.println("a- " + ids[x]);
+                dos.writeInt(registros[x].toByte().length);
                 dos.write(registros[x].toByte());
                 x++;
             }
             while(x < 1060) {
-                dos.writeInt(0);
+                dos.writeInt(9);
+                dos.writeInt(auxGame.toByte().length);
                 dos.write(auxGame.toByte());
                 x++;
             }
@@ -59,15 +64,20 @@ public class ArqIndices {
         public void fromByteArray(byte[] ba) throws IOException {
             ByteArrayInputStream bais = new ByteArrayInputStream(ba);
             DataInputStream dis = new DataInputStream(bais);
+            int tam = 0;
             quantidade = dis.readShort();
             profundidadeLocal = dis.readShort();
 
             int i=0;
             while(i<1060) {
                 System.out.println(i);
-                ids[i] = dis.read();
-                dis.read(ba);
-                registros[i].fromByte(ba); 
+                ids[i] = dis.readInt();
+                tam = dis.readInt();
+                byte[] ba2 = new byte[tam];
+                System.out.println("id- " + ids[i]);
+                dis.read(ba2);
+                registros[i].fromByte(ba2); 
+                ba = ba2;
                 i++;
             }
         }
@@ -245,15 +255,17 @@ public class ArqIndices {
 
         long endBuc = diretorio.getEnd(hash);
         Bucket buc = new Bucket(1060, 10);
-        byte[] bucByte = new byte[12723];
-        fileBuc.seek(endBuc);
-        fileBuc.read(bucByte);
-        buc.fromByteArray(bucByte); 
-        if(buc.buscar(id) != null){
-            throw new Exception("Id repetido");
-        }
+        byte[] bucByte = new byte[0];
+        //fileBuc.seek(endBuc);
+        //fileBuc.read(bucByte);
+        //buc.fromByteArray(bucByte); 
+        System.out.println('A');
+        //if(buc.buscar(id) != null){
+        //    throw new Exception("Id repetido");
+        //}
 
         if(buc.quantidade < 1060){
+
             buc.inserir(id, reg);
             fileBuc.seek(endBuc);
             fileBuc.write(buc.toByteArray());
