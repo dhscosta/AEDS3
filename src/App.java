@@ -51,7 +51,7 @@ public class App
             switch(x)
             {
                 case 1:
-                    TelaArquiHash();
+                    TelaArquiHash();                    
                 break;
                 /*
                  * case 2:

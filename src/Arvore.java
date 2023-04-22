@@ -13,7 +13,8 @@ class Arvore{
     private long pagAux;
     private boolean split = false;
     private boolean fusao = false;
-    private final int TAMANHO_REGISTRO = jogoAux.toByte().length + 4;
+    private final int TAMANHO_GAME = 4 + 160 + 3 + 30 + 4 + 4 + 8;
+    private final int TAMANHO_REGISTRO = TAMANHO_GAME + 4;
     private final int TAMANHO_PAGINA = 4+(TAMANHO_REGISTRO*maxChaves)+(ordem*8);
 
     /*
@@ -88,7 +89,7 @@ class Arvore{
 
             //variaveis auxiliares para a leitura
             Game jogo = new Game();
-            byte[] ba = new byte[jogo.toByte().length];
+            byte[] ba = new byte[TAMANHO_GAME];
 
             //lê a quantidade de elementos na pagina
             quantidade = in.readInt();
@@ -100,7 +101,7 @@ class Arvore{
                 chaves[i] = in.readInt();
                 in.read(ba);
                 jogo.fromByte(ba);
-                dados[i] = jogo;
+                dados[i] = jogo.clone();
             }
 
             //lê o último filho da página
@@ -108,7 +109,33 @@ class Arvore{
 
             //lê o ponteiro para a próxima página
             proxima = in.readLong();
-        } 
+        }
+    }
+
+    private String completaBrancos(String str, int tamanho) {
+        char[] resposta = new char[tamanho];
+
+        int i = 0;
+        while(i < str.length()){
+            resposta[i] = str.charAt(i);
+            i++;
+        }
+
+        while(i < tamanho){
+            resposta[i] = ' ';
+            i++;
+        }
+
+        String aux = new String(resposta);
+
+        return aux;
+
+        /*byte[] aux;
+        byte[] buffer = new byte[tamanho];
+        aux = str.getBytes();
+        int i=0; while(i<aux.length) { buffer[i] = aux[i]; i++; }
+        while(i<tamanho) { buffer[i] = 0x20; i++; }
+        return buffer;*/
     }
 
     public Arvore(String nome)throws IOException{
@@ -126,10 +153,12 @@ class Arvore{
         //Declaração de variáveis
         SimpleDateFormat fDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Game game = new Game();                             //variável de retorno
+        String aux;
 
         //Atribuindo os valores de 'line' no objeto
         game.setId(Integer.parseInt(line[0]));
-        game.setTitle(line[1]);
+        aux = completaBrancos(line[1], 80);
+        game.setTitle(aux);
         game.setData(fDateFormat.parse(line[2]));
         game.setWin(Boolean.parseBoolean(line[3]));
         game.setMac(Boolean.parseBoolean(line[4]));
@@ -155,6 +184,7 @@ class Arvore{
         chaveAux = chave;
         jogoAux = jogo.clone();
         pagAux = -1;
+        split = false;
 
         arquivo.seek(0);
         long pagina = arquivo.readLong();
@@ -205,10 +235,15 @@ class Arvore{
         }
 
         boolean resposta = false;
+
         if(chaveAux < pa.chaves[i]){
             resposta = create1(pa.filhos[i]);
         }else if(i == pa.quantidade){
             resposta = create1(pa.filhos[i+1]);
+        }
+        
+        if(!split){
+            return resposta;
         }
 
         if(pa.quantidade < maxChaves){
