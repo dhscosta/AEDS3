@@ -9,28 +9,40 @@ public class App
     public static void printInterface()
     {
         System.out.println("-----------INTERFACE-----------");
-        System.out.println("----ATENÇÃO----SELECIONAR A OPÇÃO 1 DESFAZ QUALQUER OPERAÇÃO DO CRUD FEITA ANTES");
         System.out.println("0 - Parar a execução");
-        System.out.println("1 - Carregar o arquivo com o os dados do csv (create) - Esse metodo demora um pouco devido ao tamanho da base");
-        System.out.println("2 - Ler um registro do arquivo usando o id (read)");
-        System.out.println("3 - Atualizar um registro de um jogo (update)");
-        System.out.println("4 - Apagar um registro de jogo (delete)");
-        System.out.println("5 - Mostrar todos os registros do arquivo");
-        System.out.println("6 - PARAR");
-
+        System.out.println("1 - Hash");
+        System.out.println("2 - Arvore");
     }
-    public static void main(String[] args) throws Exception {
 
-        //abre o csv 
+    public static void TelaArquiHash() throws Exception {
+        int y =0;
+        Scanner sc = new Scanner(System.in);
         CSVReader csv = new CSVReader(new FileReader("games.csv"));
-        Scanner ler = new Scanner(System.in);
+        ArqIndices arqIndices = new ArqIndices(1060);
+        arqIndices.lerHash();
 
-        //lê a primeira linha que informa o nome dos valores
-        String[] line;
+        do{
         
-        printInterface();
+            System.out.println("\nOpcoes ");
+            System.out.println(" 0 - parar");
+            System.out.println(" 1 - Criar a base");
+            System.out.println(" 2 - Buscar");
+            System.out.println(" 3 - Deletar");
+            System.out.println(" 4 - Update(erro)");
+            y = sc.nextInt();
 
-        //cria um crud
+            switch(y){
+                case 1:
+                    arqIndices.lerHash();
+                    break;
+            }
+        }while(y!=0);
+    }
+
+    public static void telaArvore() throws Exception {
+        Scanner ler = new Scanner(System.in);
+        CSVReader csv = new CSVReader(new FileReader("games.csv"));
+        String[] line;
         Arvore arv = new Arvore("games.bin");
         int x = 0;
         System.out.print("Insira a opção que deseja executar: ");
@@ -122,21 +134,33 @@ public class App
                     }
 
                 break;
+            }
+        }
+    }
 
-                /*case 5:
-                    //mostra todos os registros no momento
-                    arv.mostrarTodos();
-                    System.out.println("Aperte ENTER para continuar");
-                    ler.nextLine();
-                    ler.nextLine();
-                break;*/
+    public static void main(String[] args) throws Exception {
+        Scanner ler = new Scanner(System.in);
+        printInterface();
+        int x = 0;
+        System.out.print("Insira a opção que deseja executar: ");
+        x = ler.nextInt();
+        boolean teste = false;
+
+        while(x != 0){
+            switch(x)
+            {
+                case 1:
+                    TelaArquiHash();                    
+                break;
+                case 2:
+                    telaArvore();
+                break;
 
             }
             printInterface();
             x = ler.nextInt();
         }
 
-        csv.close();
         ler.close();
     }
 }

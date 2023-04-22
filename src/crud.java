@@ -74,6 +74,28 @@ class Crud{
 
         return game;
     }
+
+    /*create - método para criar registro no arquivo binário e retornar seu tamanho
+     *Parâmetros -  Game game - jogo que será inserido no arquivo
+    */
+    public long  create(Game game) throws FileNotFoundException, IOException, DataFormatException, ParseException{
+        
+        //declaração de variáveis
+        RandomAccessFile arq = new RandomAccessFile("gamees.bin", "rw");
+        byte[] b;
+        long tamArq = arq.length();
+
+        //transforma o objeto em um arranjo de bytes e escreve no arquivo (create)
+        b = game.toByte();
+        arq.seek(tamArq);
+        arq.writeChar(' ');
+        arq.writeInt(b.length);
+        arq.write(b);
+        
+        identificador++; //incrementa o número de registros
+        arq.close();
+        return tamArq;
+    }
     
     /*create - método para criar registro no arquivo binário
      *Parâmetros -  String[] line - Arranjo de Strings, obtido a partir da leitura do arquivo csv
