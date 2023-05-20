@@ -59,7 +59,7 @@ public class LZW {
             int currentCode = inputStream.readShort();
             StringBuilder outputSequence = new StringBuilder(dicionario.getSequence(currentCode));
     
-            while (true) {
+            while (true && currentCode != -1) {
                 int previousCode = currentCode;
                 currentCode = inputStream.readShort();
     
