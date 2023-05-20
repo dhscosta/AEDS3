@@ -27,8 +27,8 @@ public class App
         csv.readNext();
         String[] line;
         
-        //cria um arquivo binario
         RandomAccessFile arq = new RandomAccessFile("gamees.bin", "rw");
+        RandomAccessFile arqlog = new RandomAccessFile("arquivo_log.txt", "rw");
         printInterface();
 
         Crud crud = new Crud();
@@ -62,7 +62,17 @@ public class App
                 case 3:
                     dados = huffman.read("gamees.bin");
 
-                    huffman.comprimir(dados);
+                    long antes = System.currentTimeMillis();
+                    dados = huffman.comprimir(dados);
+                    long depois = System.currentTimeMillis();
+                    System.out.println("Tempo de execução: " + (depois-antes));
+                    RandomAccessFile arquivo = new RandomAccessFile("Huffman_compressed.bin", "rw");
+                    arquivo.write(dados);
+                    long ganho = ((arq.length() - arquivo.length()) / arquivo.length());
+                    arqlog.writeChars("Tempo de execução Huffman: " + (depois-antes) + "\n");
+                    arqlog.writeChars("Porcentagem de ganho Huffman: " + ganho + "\n");
+                    arquivo.close();
+
                 break;
 
                 case 4:
@@ -72,7 +82,16 @@ public class App
                 case 5:
                     
                     if(dados != null){
-                        huffman.descomprimir(dados);
+                        antes = System.currentTimeMillis();
+                        dados = huffman.descomprimir(dados);
+                        depois = System.currentTimeMillis();
+                        System.out.println("Tempo de execução: " + (depois-antes));
+                        RandomAccessFile arquivo2 = new RandomAccessFile("Huffman_descompressed.bin", "rw");
+                        arquivo2.write(dados);
+                        long perda = ((arq.length() - arquivo2.length()) / arquivo2.length());
+                        arqlog.writeChars("Tempo de execução Huffman: " + (depois-antes) + "\n");
+                        arqlog.writeChars("Porcentagem de perda Huffman: " + perda + "\n");
+                        arquivo2.close();
                     }    
                 
                 break;
@@ -84,6 +103,5 @@ public class App
 
         csv.close();
         ler.close();
-        arq.close();
     }
 }

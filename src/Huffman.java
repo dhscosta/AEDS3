@@ -116,15 +116,4 @@ public class Huffman {
 
         return dataDecodificado.toString().getBytes();
     }
-
-    /*public static void main(String[] args) {
-        byte[] data = {1, 1, 1, 2, 2, 3, 3, 3, 3, 3};
-
-        Huffman huffman = new Huffman();
-        System.out.println(data.length);
-        data = huffman.comprimir(data);
-        System.out.println(data.length);
-        data = huffman.descomprimir(data);
-        System.out.println(data.length);
-    }*/
 }
