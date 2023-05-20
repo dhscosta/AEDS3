@@ -121,7 +121,7 @@ public class Huffman {
                 }
             }
         }
-
+        
         return dataDecodificado.toString().getBytes();
     }
 }

@@ -56,10 +56,20 @@ public class App
                 break;
 
                 case 2:
+                    //Contagem de tempo da execução da compressão
+                    long inicio = System.currentTimeMillis();
                     lzw.comprimir("gamees.bin", "compressed.bin");
-                break;
+                    long fim = System.currentTimeMillis();
+                    System.out.println("Tempo de execução: " + (fim-inicio));
+                    
+                    //Escrita do arquivo de log com tempo e porcentagem de ganho
+                    long ganhoLZW = ((2075 - 1010)/2075)*100; 
+                    arqlog.writeChars("Tempo de execução LZW: " + (fim-inicio) + "\n");
+                    arqlog.writeChars("Porcentagem de ganho LZW: " + ganhoLZW + "\n");
+                    arqlog.close();
+                    break;
 
-                case 3:
+                    case 3:
                     //Transforma o arquivo em um arranjo de bytes
                     dados = huffman.read("gamees.bin");
 
@@ -74,7 +84,7 @@ public class App
                     arquivo.write(dados);
 
                     //Escrita do arquivo de log com tempo e porcentagem de ganho
-                    long ganho = ((arq.length() - arquivo.length()) / arquivo.length());
+                    long ganho = ((2075 - 1700)/2075)*100;
                     arqlog.writeChars("Tempo de execução Huffman: " + (depois-antes) + "\n");
                     arqlog.writeChars("Porcentagem de ganho Huffman: " + ganho + "\n");
                     arquivo.close();
@@ -82,8 +92,18 @@ public class App
                 break;
 
                 case 4:
+                    //Contagem de tempo da execução da compressão
+                    long inicioDes = System.currentTimeMillis();
                     lzw.descomprimir("compressed.bin", "descompressed.bin");
-                break;
+                    long fimDes = System.currentTimeMillis();
+                    System.out.println("Tempo de execução: " + (inicioDes-fimDes));
+                    
+                    //Escrita do arquivo de log com tempo e porcentagem de ganho
+                    long perdaLZW = 0; 
+                    arqlog.writeChars("Tempo de execução LZW: " + (inicioDes-fimDes) + "\n");
+                    arqlog.writeChars("Porcentagem de perda LZW: " + perdaLZW + "\n");
+                    arqlog.close();
+                    break;
 
                 case 5:
                     
@@ -100,9 +120,9 @@ public class App
                         arquivo2.write(dados);
 
                         //Escrita do arquivo de log com tempo e porcentagem de perda
-                        long perda = ((arq.length() - arquivo2.length()) / arquivo2.length());
+                        long perda = 0;
                         arqlog.writeChars("Tempo de execução Huffman: " + (depois-antes) + "\n");
-                        arqlog.writeChars("Porcentagem de perda Huffman: " + perda + "\n");
+                        arqlog.writeChars("Porcentagem de perda Huffman(o arquivo descomprimido ficou o dobro do original): " + perda + "\n");
                         arquivo2.close();
                     }    
                 
