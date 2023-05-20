@@ -1,14 +1,18 @@
+//dependencias
 import java.util.*;
 import java.io.*;
 
+//Classe para compressão de dados
 public class Huffman {
-    private final int TAM_BYTE = 256;
-    private NodoHuf raiz;
+    private final int TAM_BYTE = 256;   //tamanho máximo possível dos bytes
+    private NodoHuf raiz;               //raiz da árvore
 
+    //Construtor padrão
     Huffman(){
         raiz = null;
     }
 
+    //Método para contar a frequencia dos símbolos 
     private int[] contarFrequencia(byte[] data) {
         int[] frequencias = new int[TAM_BYTE];
         for (byte b : data) {
@@ -17,6 +21,7 @@ public class Huffman {
         return frequencias;
     }
 
+    //Método para construir a árvore para auxiliar na compressão
     private NodoHuf construtorArvHuf(int[] frequencias) {
         PriorityQueue<NodoHuf> pq = new PriorityQueue<>();
 
@@ -36,12 +41,14 @@ public class Huffman {
         return pq.poll();
     }
 
+    //Método que chama um outro método recursivo, para o mapeamento dos símbolos
     private Map<Byte, String> construtorCodMap() {
         Map<Byte, String> codMap = new HashMap<>();
         construtorCodMapRec(raiz, "", codMap);
         return codMap;
     }
 
+    //Método que de fato mapeia os símbolos
     private void construtorCodMapRec(NodoHuf nodo, String prefixo, Map<Byte, String> codMap) {
         if (nodo.esq == null && nodo.dir == null) {
             codMap.put(nodo.chave, prefixo);
@@ -51,6 +58,7 @@ public class Huffman {
         }
     }
 
+    //Método que converte a string para um byte
     private byte[] convtoByte(String codData) {
         int length = (codData.length() + 7) / 8;
         byte[] bytes = new byte[length];
@@ -63,6 +71,7 @@ public class Huffman {
         return bytes;
     }
 
+    //Método para transformar um arquivo binário em um array de bytes
     public byte[] read(String arquivo)throws FileNotFoundException, IOException{
         File arq = new File(arquivo);
         byte[] b = new byte[(int) arq.length()];
@@ -74,17 +83,14 @@ public class Huffman {
         return b;
     }
 
+    //Método que de fato comprime o array de bytes originário do arquivo
     public byte[] comprimir(byte[] data) {
-        // Contagem da frequência dos bytes
         int[] frequencias = contarFrequencia(data);
 
-        // Construção da árvore de Huffman
         raiz = construtorArvHuf(frequencias);
 
-        // Construção do mapa de codificação
         Map<Byte, String> codMap = construtorCodMap();
 
-        // Compressão dos bytes
         StringBuilder dataCod = new StringBuilder();
         for (byte b : data) {
             dataCod.append(codMap.get(b));
@@ -93,6 +99,8 @@ public class Huffman {
         return convtoByte(dataCod.toString());
     }
 
+    
+    //Método para descompressão do array de bytes
     public byte[] descomprimir(byte[] dataCodificado) {
         StringBuilder dataDecodificado = new StringBuilder();
         NodoHuf nodoAtual = raiz;
