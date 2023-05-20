@@ -36,6 +36,7 @@ public class App
         System.out.print("Insira a opção que deseja executar: ");
         x = ler.nextInt();
 
+        LZW lzw = new LZW();
         Huffman huffman = new Huffman();
         byte[] dados = null;
 
@@ -55,7 +56,7 @@ public class App
                 break;
 
                 case 2:
-                    //código para compressão com lzw
+                    lzw.comprimir("gamees.bin", "compressed.bin");
                 break;
 
                 case 3:
@@ -65,7 +66,7 @@ public class App
                 break;
 
                 case 4:
-                    //código para descompressão com lzw
+                    lzw.descomprimir("compressed.bin", "descompressed.bin");
                 break;
 
                 case 5:
