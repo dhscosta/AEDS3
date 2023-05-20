@@ -1,23 +1,12 @@
 import java.util.*;
+import java.io.*;
 
 public class Huffman {
     private final int TAM_BYTE = 256;
+    private NodoHuf raiz;
 
-    public void comprimir(byte[] data) {
-        // Contagem da frequência dos bytes
-        int[] frequencias = contarFrequencia(data);
-
-        // Construção da árvore de Huffman
-        NodoHuf raiz = construtorArvHuf(frequencias);
-
-        // Construção do mapa de codificação
-        Map<Byte, String> codMap = construtorCodMap(raiz);
-
-        // Compressão dos bytes
-        StringBuilder dataCod = new StringBuilder();
-        for (byte b : data) {
-            dataCod.append(codMap.get(b));
-        }
+    Huffman(){
+        raiz = null;
     }
 
     private int[] contarFrequencia(byte[] data) {
@@ -47,7 +36,7 @@ public class Huffman {
         return pq.poll();
     }
 
-    private Map<Byte, String> construtorCodMap(NodoHuf raiz) {
+    private Map<Byte, String> construtorCodMap() {
         Map<Byte, String> codMap = new HashMap<>();
         construtorCodMapRec(raiz, "", codMap);
         return codMap;
@@ -73,4 +62,69 @@ public class Huffman {
 
         return bytes;
     }
+
+    public byte[] read(String arquivo)throws FileNotFoundException, IOException{
+        File arq = new File(arquivo);
+        byte[] b = new byte[(int) arq.length()];
+
+        try(FileInputStream fis = new FileInputStream(arq)){
+            fis.read(b);
+        }
+
+        return b;
+    }
+
+    public byte[] comprimir(byte[] data) {
+        // Contagem da frequência dos bytes
+        int[] frequencias = contarFrequencia(data);
+
+        // Construção da árvore de Huffman
+        raiz = construtorArvHuf(frequencias);
+
+        // Construção do mapa de codificação
+        Map<Byte, String> codMap = construtorCodMap();
+
+        // Compressão dos bytes
+        StringBuilder dataCod = new StringBuilder();
+        for (byte b : data) {
+            dataCod.append(codMap.get(b));
+        }
+
+        return convtoByte(dataCod.toString());
+    }
+
+    public byte[] descomprimir(byte[] dataCodificado) {
+        StringBuilder dataDecodificado = new StringBuilder();
+        NodoHuf nodoAtual = raiz;
+
+        for (byte b : dataCodificado) {
+            for (int i = 7; i >= 0; i--) {
+                int bit = (b >> i) & 1;
+
+                if (bit == 0) {
+                    nodoAtual = nodoAtual.esq;
+                } else if (bit == 1) {
+                    nodoAtual = nodoAtual.dir;
+                }
+
+                if (nodoAtual.esq == null && nodoAtual.dir == null) {
+                    dataDecodificado.append(nodoAtual.chave);
+                    nodoAtual = raiz;
+                }
+            }
+        }
+
+        return dataDecodificado.toString().getBytes();
+    }
+
+    /*public static void main(String[] args) {
+        byte[] data = {1, 1, 1, 2, 2, 3, 3, 3, 3, 3};
+
+        Huffman huffman = new Huffman();
+        System.out.println(data.length);
+        data = huffman.comprimir(data);
+        System.out.println(data.length);
+        data = huffman.descomprimir(data);
+        System.out.println(data.length);
+    }*/
 }

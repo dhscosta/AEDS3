@@ -12,12 +12,10 @@ public class App
         System.out.println("----ATENÇÃO----SELECIONAR A OPÇÃO 1 DESFAZ QUALQUER OPERAÇÃO DO CRUD FEITA ANTES");
         System.out.println("0 - Parar a execução");
         System.out.println("1 - Carregar o arquivo com o os dados do csv (create)");
-        System.out.println("2 - Ler um registro do arquivo usando o id (read)");
-        System.out.println("3 - Atualizar um registro de um jogo (update)");
-        System.out.println("4 - Apagar um registro de jogo (delete)");
-        System.out.println("5 - Mostrar todos os registros do arquivo");
-        System.out.println("6 - Compressão LZW");
-        System.out.println("7 - Compressão Huffman");
+        System.out.println("2 - Compressão LZW");
+        System.out.println("3 - Compressão Huffman");
+        System.out.println("4 - Descomprimir LZW");
+        System.out.println("5 - Descomprimir Huffman(funciona apenas se a opção 3 já foi executada)");
     }
     public static void main(String[] args) throws Exception {
 
@@ -38,6 +36,9 @@ public class App
         System.out.print("Insira a opção que deseja executar: ");
         x = ler.nextInt();
 
+        Huffman huffman = new Huffman();
+        byte[] dados = null;
+
         while(x != 0){
             switch(x)
             {
@@ -51,75 +52,32 @@ public class App
                     ler.nextLine();
                     ler.nextLine();
                     
-                    
                 break;
-                
+
                 case 2:
-                    System.out.println("Insira o id do jogo que será pesquisado: ");
-                    int pesqId = ler.nextInt();
-                    crud.read(pesqId);
+                    //código para compressão com lzw
                 break;
 
                 case 3:
-                    System.out.println("Insira todos os campos do registro, mesmo os que não forem alterados");
-                    int iden;
-                    do{
-                        System.out.print("Insira o ID do jogo que sofrerá update: ");
-                        iden = ler.nextInt();
-                    }while(crud.read(iden) == false);
+                    dados = huffman.read("gamees.bin");
 
-                    System.out.print("Insira o título do jogo: ");
-                    ler.nextLine();
-                    String title = ler.nextLine();
-
-                    System.out.print("O jogo funciona em sistemas windows?(true/false): ");
-                    boolean win = ler.nextBoolean();
-                    System.out.print("O jogo funciona em sistemas mac?(true/false): ");
-                    boolean mac = ler.nextBoolean();
-                    System.out.print("O jogo funciona em sistemas linux?(true/false): ");
-                    boolean linux = ler.nextBoolean();
-
-                    System.out.print("Insira a avaliação do jogo: ");
-                    ler.nextLine();
-                    String rating = ler.nextLine();
-
-                    System.out.print("Insira o preço do jogo(use virgula para decimal): ");
-                    float price = ler.nextFloat();
-
-                    System.out.print("Insira a data de lançamento do jogo(yyyy-mm-dd): ");
-                    SimpleDateFormat fDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    ler.nextLine();
-                    String stringData = ler.nextLine();
-                    Date data = fDateFormat.parse(stringData);
-
-                    crud.update(iden, title, win, mac, linux, rating, price, data);
+                    huffman.comprimir(dados);
                 break;
 
                 case 4:
-                    int identificador;
-                    do{
-                        System.out.println("Insira o id do jogo que será deletado: ");
-                        identificador = ler.nextInt();
-                    }while(crud.read(identificador) == false);
-                    crud.delete(identificador);
+                    //código para descompressão com lzw
                 break;
 
                 case 5:
-                    crud.mostrarTodos();
-                    System.out.println("Aperte ENTER para continuar");
-                    ler.nextLine();
-                    ler.nextLine();
-                break;
-
-                case 6:
-                    //código para execução do lzw
-                break;
-
-                case 7:
-                    //código para execução do Huffman
+                    
+                    if(dados != null){
+                        huffman.descomprimir(dados);
+                    }    
+                
                 break;
             }
             printInterface();
+            System.out.print("Insira a opção que deseja executar: ");
             x = ler.nextInt();
         }
 
