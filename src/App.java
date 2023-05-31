@@ -35,7 +35,7 @@ public class App
         Crud crud = new Crud();
         int x = 0;
 
-        //Imprimi interface com as opções e lê opção desejada
+        //Imprime interface com as opções e lê opção desejada
         printInterface();
         System.out.print("Insira a opção que deseja executar: ");
         x = ler.nextInt();
@@ -77,7 +77,7 @@ public class App
                 break;
             }
 
-            //Imprimi interface com as opções e lê próxima opção desejada
+            //Imprime interface com as opções e lê próxima opção desejada
             printInterface();
             System.out.print("Insira a opção que deseja executar: ");
             x = ler.nextInt();
