@@ -12,7 +12,7 @@ public class App
     {
         System.out.println("-----------INTERFACE-----------");
         System.out.println("0 - Parar a execução");
-        System.out.println("1 - Carregar o arquivo com o os dados do csv");
+        System.out.println("1 - Carregar o arquivo com os dados do csv");
         System.out.println("2 - Executar casamento de padroes KMP");
         System.out.println("3 - Executar casamento de padroes Shift-And");
     }
