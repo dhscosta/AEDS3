@@ -1,44 +1,50 @@
+//Dependências
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import com.opencsv.*;
 
+//Classe principal para teste dos métodos implementados
 public class App
 {
-
+    //Método para imprimir na tela opções disponíveis
     public static void printInterface()
     {
         System.out.println("-----------INTERFACE-----------");
-        System.out.println("----ATENÇÃO----SELECIONAR A OPÇÃO 1 DESFAZ QUALQUER OPERAÇÃO DO CRUD FEITA ANTES");
         System.out.println("0 - Parar a execução");
-        System.out.println("1 - Carregar o arquivo com o os dados do csv (create)");
-        System.out.println("2 - Ler um registro do arquivo usando o id (read)");
-        System.out.println("3 - Atualizar um registro de um jogo (update)");
-        System.out.println("4 - Apagar um registro de jogo (delete)");
-        System.out.println("5 - Mostrar todos os registros do arquivo");
+        System.out.println("1 - Carregar o arquivo com o os dados do csv");
+        System.out.println("2 - Executar casamento de padroes KMP");
+        System.out.println("3 - Executar casamento de padroes Shift-And");
     }
+    
+    //Função principal
     public static void main(String[] args) throws Exception {
 
-        //abre o csv 
+        //Abre o csv 
         CSVReader csv = new CSVReader(new FileReader("games.csv"));
         Scanner ler = new Scanner(System.in);
 
-        //lê a primeira linha que informa o nome dos valores
+        //Lê a primeira linha que informa o nome dos valores
         csv.readNext();
         String[] line;
         
-        //cria um arquivo binario
+        //Cria um arquivo binario
         RandomAccessFile arq = new RandomAccessFile("gamees.bin", "rw");
-        printInterface();
 
+        //Inicializa o Crud(necessário para carregamento do arquivo binário)
         Crud crud = new Crud();
         int x = 0;
+
+        //Imprimi interface com as opções e lê opção desejada
+        printInterface();
         System.out.print("Insira a opção que deseja executar: ");
         x = ler.nextInt();
 
+        //Repete enquanto opção for diferente de 0 (0 == terminar execução do código)
         while(x != 0){
             switch(x)
             {
+                //Cria arquivo binário a partir do csv
                 case 1:
                     
                     while((line = csv.readNext()) != null)
@@ -52,109 +58,34 @@ public class App
                     
                 break;
                 
+                //Executa algoritmo KMP
                 case 2:
-                    System.out.println("Insira o id do jogo que será pesquisado: ");
-                    int pesqId = ler.nextInt();
-                    crud.read(pesqId);
+                    
+                    //espaço reservado para KMP
+
                 break;
 
+                //Executa algoritmo Shift-And
                 case 3:
-                    System.out.println("Insira todos os campos do registro, mesmo os que não forem alterados");
-                    int iden;
-                    do{
-                        System.out.print("Insira o ID do jogo que sofrerá update: ");
-                        iden = ler.nextInt();
-                    }while(crud.read(iden) == false);
+                    
+                    //espaço reservado para Shift-And
 
-                    System.out.print("Insira o título do jogo: ");
-                    ler.nextLine();
-                    String title = ler.nextLine();
-
-                    System.out.print("O jogo funciona em sistemas windows?(true/false): ");
-                    boolean win = ler.nextBoolean();
-                    System.out.print("O jogo funciona em sistemas mac?(true/false): ");
-                    boolean mac = ler.nextBoolean();
-                    System.out.print("O jogo funciona em sistemas linux?(true/false): ");
-                    boolean linux = ler.nextBoolean();
-
-                    System.out.print("Insira a avaliação do jogo: ");
-                    ler.nextLine();
-                    String rating = ler.nextLine();
-
-                    System.out.print("Insira o preço do jogo(use virgula para decimal): ");
-                    float price = ler.nextFloat();
-
-                    System.out.print("Insira a data de lançamento do jogo(yyyy-mm-dd): ");
-                    SimpleDateFormat fDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    ler.nextLine();
-                    String stringData = ler.nextLine();
-                    Date data = fDateFormat.parse(stringData);
-
-                    crud.update(iden, title, win, mac, linux, rating, price, data);
                 break;
 
-                case 4:
-                    int identificador;
-                    do{
-                        System.out.println("Insira o id do jogo que será deletado: ");
-                        identificador = ler.nextInt();
-                    }while(crud.read(identificador) == false);
-                    crud.delete(identificador);
-                break;
-
-                case 5:
-                    crud.mostrarTodos();
-                    System.out.println("Aperte ENTER para continuar");
-                    ler.nextLine();
-                    ler.nextLine();
+                default:
+                    System.out.println("Opção inválida!");
                 break;
             }
+
+            //Imprimi interface com as opções e lê próxima opção desejada
             printInterface();
+            System.out.print("Insira a opção que deseja executar: ");
             x = ler.nextInt();
         }
 
+        //fechamento de classes
         csv.close();
         ler.close();
         arq.close();
     }
 }
-
-/*while((line = csv.readNext()) != null)
-{
-    SimpleDateFormat fDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    Game game = new Game();
-    game.setId(Integer.parseInt(line[0]));
-    game.setTitle(line[1]);
-    game.setData(fDateFormat.parse(line[2]));
-    game.setWin(Boolean.parseBoolean(line[3]));
-    game.setMac(Boolean.parseBoolean(line[4]));
-    game.setLinux(Boolean.parseBoolean(line[5]));
-    game.boolToArray();                                 //transforma os 3 booleanos em um arranjo de String
-    game.toSigla(line[6]);                              //transforma a string da avaliaçao em uma sigla de 2 digitos 
-    game.setPrice(Float.parseFloat(line[9]));
-
-    //apenas pra verificar os parses
-    game.mostrar();
-
-    //transforma em um arranjo de bytes e escreve no arquivo (create)
-    b = game.toByte();
-    arq.writeInt(b.length);
-    arq.write(b);
-    y++; //numero de registros
-}
-
-int z = 0;
-arq.seek(0);
-
-while(z < y)
-{
-    int tam = arq.readInt();
-    byte[] c = new byte[tam];
-    arq.read(c);
-    Game gamer = new Game();
-    gamer.fromByte(c);
-    gamer.mostrar();
-    z++;
-}
-
-arq.close();*/
