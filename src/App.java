@@ -2,6 +2,9 @@
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import javax.security.auth.callback.TextOutputCallback;
+
 import com.opencsv.*;
 
 //Classe principal para teste dos métodos implementados
@@ -60,8 +63,16 @@ public class App
                 
                 //Executa algoritmo KMP
                 case 2:
+                    //inicializa classe KMP
+                    KMP kmp = new KMP();
                     
-                    //espaço reservado para KMP
+                    //lê o padrão do terminal
+                    String nome;
+                    System.out.print("Digite o nome que deseja procurar: ");
+                    nome = ler.nextLine();
+
+                    //Efetua o casamento de padrões com o padrão desejado procurando por todos os registros
+                    
 
                 break;
 
