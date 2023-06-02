@@ -1,7 +1,7 @@
 //Classe para a implementação do algoritmo de casamento de padrões KMP
 class KMP {
     //Método para a construção do array de estados que será usado para o casamento de padrões 
-    public int[] arrayEstados(String padrao){
+    private int[] arrayEstados(String padrao){
         //Declaração de variáveis
         int i = 1, j = 0;
         int[] estados = new int[padrao.length()];
@@ -39,7 +39,7 @@ class KMP {
          * procura usando array de bytes
          * 
          * byte[] text = texto.getBytes();
-         * byte[] pad = pad.getBytes();
+         * byte[] pad = padrao.getBytes();
          * 
          * Comparação de byte[] com byte[], funciona, e  byte[] com String também funciona
         */
