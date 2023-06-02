@@ -1,7 +1,7 @@
 //Classe para a implementação do algoritmo de casamento de padrões KMP
 class KMP {
     //Método para a construção do array de estados que será usado para o casamento de padrões 
-    public static int[] arrayEstados(String padrao){
+    public int[] arrayEstados(String padrao){
         //Declaração de variáveis
         int i = 1, j = 0;
         int[] estados = new int[padrao.length()];
@@ -28,7 +28,7 @@ class KMP {
     }
 
     //Método para pesquisa com casamento de padrões KMP (sem sobrescrita)
-    public static void search(String padrao, String texto){
+    public void search(String padrao, String texto){
         //inicialização de variáveis
         int i = 0, j = 0;
 
@@ -41,7 +41,8 @@ class KMP {
                 j++; i = i + 1;
                 if(i == padrao.length()){
                     i = 0; //i = estados[i-1];
-                    System.out.println("Achou");
+                    System.out.println("Achou: " + texto);
+                    return;
                 }
             }else{
                 if(i > 0){
@@ -53,10 +54,10 @@ class KMP {
         }
     }
 
-    public static void main(String[] args){
-        String padrao = "sinis";
-        String texto = "sinisinis";
+    /*public static void main(String[] args){
+        String padrao = "Call";
+        String texto = "Call of Duty";
 
         search(padrao, texto);
-    }
+    }*/
 }

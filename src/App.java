@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.security.auth.callback.TextOutputCallback;
+import javax.swing.text.html.parser.ParserDelegator;
 
 import com.opencsv.*;
 
@@ -63,16 +64,34 @@ public class App
                 
                 //Executa algoritmo KMP
                 case 2:
+                    ler.nextLine();
+                    
                     //inicializa classe KMP
                     KMP kmp = new KMP();
+                    arq.seek(0);
                     
                     //lê o padrão do terminal
                     String nome;
                     System.out.print("Digite o nome que deseja procurar: ");
                     nome = ler.nextLine();
 
+                    int tamanho = 0;
+                    byte[] b;
+                    long pos;
+                    String texto;
                     //Efetua o casamento de padrões com o padrão desejado procurando por todos os registros
-                    
+                    while(arq.getFilePointer() != arq.length()){
+                        arq.readChar();
+                        tamanho = arq.readInt();
+                        pos = arq.getFilePointer();
+                        arq.readInt();
+                        texto = arq.readUTF();
+                        arq.seek(pos);
+                        b = new byte[tamanho];
+                        arq.read(b);
+
+                        kmp.search(nome, texto);
+                    }
 
                 break;
 
