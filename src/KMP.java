@@ -35,6 +35,15 @@ class KMP {
         //construcao do array de estados utilizando o padrao desejado
         int[] estados = arrayEstados(padrao);
 
+        /*
+         * procura usando array de bytes
+         * 
+         * byte[] text = texto.getBytes();
+         * byte[] pad = pad.getBytes();
+         * 
+         * Comparação de byte[] com byte[], funciona, e  byte[] com String também funciona
+        */
+
         //loop para a pesquisa do padrão em cima do texto
         while(j < texto.length()){
             if(padrao.charAt(i) == texto.charAt(j)){
@@ -53,11 +62,4 @@ class KMP {
             }
         }
     }
-
-    /*public static void main(String[] args){
-        String padrao = "Call";
-        String texto = "Call of Duty";
-
-        search(padrao, texto);
-    }*/
 }

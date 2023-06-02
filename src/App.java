@@ -64,6 +64,7 @@ public class App
                 
                 //Executa algoritmo KMP
                 case 2:
+                    //Leitura para forçar parada
                     ler.nextLine();
                     
                     //inicializa classe KMP
@@ -75,21 +76,31 @@ public class App
                     System.out.print("Digite o nome que deseja procurar: ");
                     nome = ler.nextLine();
 
+                    //variáveis de auxílio
                     int tamanho = 0;
                     byte[] b;
                     long pos;
                     String texto;
+
                     //Efetua o casamento de padrões com o padrão desejado procurando por todos os registros
                     while(arq.getFilePointer() != arq.length()){
+                        //Leitura da lápide, do tamanho, da posição do ponteiro de arquivo e do id do jogo, respectimente
                         arq.readChar();
                         tamanho = arq.readInt();
                         pos = arq.getFilePointer();
                         arq.readInt();
+
+                        //leitura do título
                         texto = arq.readUTF();
+                        
+                        //volta arquivo para a posicao do início do registro
                         arq.seek(pos);
+                        
+                        //leitura para pular registro
                         b = new byte[tamanho];
                         arq.read(b);
 
+                        //pesquisa com kmp no registro
                         kmp.search(nome, texto);
                     }
 
