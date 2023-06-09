@@ -2,7 +2,7 @@
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+import java.lang.System;
 import javax.security.auth.callback.TextOutputCallback;
 import javax.swing.text.html.parser.ParserDelegator;
 
@@ -44,6 +44,9 @@ public class App
         System.out.print("Insira a opção que deseja executar: ");
         x = ler.nextInt();
 
+        //Inicia arquivo de log
+        RandomAccessFile log = new RandomAccessFile("log.txt", "rw");
+
         //Repete enquanto opção for diferente de 0 (0 == terminar execução do código)
         while(x != 0){
             switch(x)
@@ -82,6 +85,9 @@ public class App
                     long pos;
                     String texto;
 
+                    //Tempo do início do kmp
+                    long tempoInicial = System.currentTimeMillis();
+
                     //Efetua o casamento de padrões com o padrão desejado procurando por todos os registros
                     while(arq.getFilePointer() != arq.length()){
                         //Leitura da lápide, do tamanho, da posição do ponteiro de arquivo e do id do jogo, respectimente
@@ -103,6 +109,15 @@ public class App
                         //pesquisa com kmp no registro
                         kmp.search(nome, texto);
                     }
+
+                    //Tempo final do KMP
+                    long tempoFinal = System.currentTimeMillis();
+
+                    //Escrita do log no terminal
+                    System.out.println("Tempo de execucao: " + (tempoFinal-tempoInicial) + "; " + "Comparacoes: " + kmp.getComp());
+
+                    //Escrita do log no arquivo
+                    log.writeUTF("KMP| Tempo de execucao: " + (tempoFinal-tempoInicial) + "; " + "Comparacoes: " + kmp.getComp());
 
                 break;
 
@@ -128,5 +143,6 @@ public class App
         csv.close();
         ler.close();
         arq.close();
+        log.close();
     }
 }

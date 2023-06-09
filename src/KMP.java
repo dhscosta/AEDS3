@@ -1,5 +1,17 @@
 //Classe para a implementação do algoritmo de casamento de padrões KMP
 class KMP {
+    private int comparacoes;    //contagem de comparações da execução do algoritmo
+
+    // Construtor da classe
+    KMP(){
+        comparacoes = 0;
+    }
+
+    //Método de acesso de comparações
+    public int getComp(){
+        return comparacoes;
+    }
+
     //Método para a construção do array de estados que será usado para o casamento de padrões 
     private int[] arrayEstados(String padrao){
         //Declaração de variáveis
@@ -9,14 +21,17 @@ class KMP {
 
         //Loop para a construção do array de estados
         while(i < padrao.length()){
+            comparacoes++;
             if(padrao.charAt(j) == padrao.charAt(i)){
                 j = j + 1;
                 estados[i] = j;
                 i++;
+                comparacoes++;
             }else{
                 if(j == 0){
                     estados[i] = j;
                     i++;
+                    comparacoes++;
                 }else{
                     j = estados[j-1];
                 }
@@ -46,15 +61,19 @@ class KMP {
 
         //loop para a pesquisa do padrão em cima do texto
         while(j < texto.length()){
+            comparacoes++;
             if(padrao.charAt(i) == texto.charAt(j)){
+                comparacoes++;
                 j++; i = i + 1;
                 if(i == padrao.length()){
+                    comparacoes++;
                     i = 0; //i = estados[i-1];
                     System.out.println("Achou: " + texto);
                     return;
                 }
             }else{
                 if(i > 0){
+                    comparacoes++;
                     i = estados[i-1];
                 }else{
                     j++;
