@@ -124,7 +124,59 @@ public class App
                 //Executa algoritmo Shift-And
                 case 3:
                     
-                    //espaço reservado para Shift-And
+                    //Leitura para forçar parada
+                    ler.nextLine();
+                    
+                    //inicializa classe shift-and
+                    ShiftAnd SA = new ShiftAnd();
+                    arq.seek(0);
+                    
+                    //lê o padrão do terminal
+                    String padrao;
+                    System.out.print("Digite o nome que deseja procurar: ");
+                    padrao = ler.nextLine();
+
+                    //variáveis de auxílio
+                    int tam = 0;
+                    byte[] by;
+                    long p;
+                    String txt;
+                    int reg = 0;
+
+                    //Tempo do início do kmp
+                    long tempoI = System.currentTimeMillis();
+
+                    //Efetua o casamento de padrões com o padrão desejado procurando por todos os registros
+                    while(arq.getFilePointer() != arq.length()){
+                        reg = reg + 1;
+                        //Leitura da lápide, do tamanho, da posição do ponteiro de arquivo e do id do jogo, respectimente
+                        arq.readChar();
+                        tam = arq.readInt();
+                        p = arq.getFilePointer();
+                        arq.readInt();
+
+                        //leitura do título
+                        txt = arq.readUTF();
+                        //volta arquivo para a posicao do início do registro
+                        arq.seek(p);
+                        
+                        //leitura para pular registro
+                        by = new byte[tam];
+                        arq.read(by);
+
+                        //pesquisa com shift-and no registro
+                        SA.search(txt, padrao, reg);
+                    }
+
+                     //Tempo final do shift-and
+                     long tempoF = System.currentTimeMillis();
+
+                     //Escrita do log no terminal
+                     System.out.println("Tempo de execucao: " + (tempoF-tempoI) + "; " + "Comparacoes: " + SA.getComp());
+ 
+                     //Escrita do log no arquivo
+                     log.writeUTF("Shift-and| Tempo de execucao: " + (tempoF-tempoI) + "; " + "Comparacoes: " + SA.getComp());
+
 
                 break;
 
