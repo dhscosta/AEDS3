@@ -27,7 +27,7 @@ public class App
         csv.readNext();
         String[] line;
         
-        //cria um arquivo binario
+        //cria um arquivo binario para a base e para a criptografia
         RandomAccessFile arq = new RandomAccessFile("gamees.bin", "rw");
         printInterface();
 
@@ -53,11 +53,82 @@ public class App
                 break;
                 
                 case 2:
-                    //espaço reservado para o código de DES
+                    //Leitura para forçar parada
+                    ler.nextLine();
+
+                    RandomAccessFile arqCrip = new RandomAccessFile("arqCrip.bin", "rw");
+
+                    arq.seek(0);
+        
+                    //lê a chave 
+                    String key;
+                    System.out.print("Digite a chave para criptografar: ");
+                    key = ler.nextLine();
+
+                    //variáveis de auxílio
+                    int tam = 0;
+                    byte[] by;
+                    char c;
+                    byte[] crypt;
+                    String cryptStr;
+                    Game jogo = new Game();
+
+                    //Efetua o casamento de padrões com o padrão desejado procurando por todos os registros
+                    while(arq.getFilePointer() != arq.length()){
+                        c = arq.readChar();         //le lapide
+                        tam = arq.readInt();     //le tamanho registro
+                        //pula se tiver lapide
+                        if(c == '#'){
+                            arq.skipBytes(tam);
+                        }
+                        else{
+                            //lê o registro e transforma em um objeto game
+                            by = new byte[tam];
+                            arq.read(by);
+                            jogo.fromByte(by);
+                            jogo.mostrar();
+
+
+                            //criptografia dos titulos, mostra no terminal, e salva no arquivo
+                            crypt = Des.encrypt(jogo.title, key);
+                            cryptStr = crypt.toString();     
+                            System.out.println(cryptStr);
+                            jogo.setTitle(cryptStr);           //seta titulo criptografado
+                            by = jogo.toByte();                //transforma o novo game em bytes
+                            jogo.mostrar();
+                            arqCrip.write(by);                 //escreve no arquivo criptografado
+                        }
+                    }
+
+                    arqCrip.close();
                 break;
 
                 case 3:
-                    //espaço reservado para o código de DES
+                    RandomAccessFile arqDes = new RandomAccessFile("arqCrip.bin", "rw");
+                    Game jg = new Game();
+
+                    //lê a chave 
+                    System.out.print("Digite a chave para criptografar: ");
+                    key = ler.nextLine();
+
+                    arqDes.seek(0);
+
+                    while(arqDes.getFilePointer() != arqDes.length()){
+                        c = arqDes.readChar();
+                        tam = arqDes.readInt();
+
+                        by = new byte[tam];
+                        arqDes.read(by);
+                        jg.fromByte(by);
+
+                        byte[] aux = jg.title.getBytes();
+                        crypt = Des.decrypt(aux, key);
+                        cryptStr = crypt.toString();
+                        System.out.println(cryptStr);
+                    }
+                    ler.nextLine();
+               
+                
                 break;
 
                 case 4:

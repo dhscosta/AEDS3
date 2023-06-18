@@ -131,7 +131,7 @@ class Game {
 
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis = new DataInputStream(bais);
-
+        plataformas.clear();
         g_id=dis.readInt();
         title=dis.readUTF();
         data = new Date(dis.readLong());
