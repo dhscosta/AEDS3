@@ -144,7 +144,7 @@ class RSA {
     }
 
     //main para testes
-    /*public static void main(String[] args){
+    /*public void main(String[] args){
         Chaves chaves = generateKeys();
         
         String entrada = "Matheus Sinis";
@@ -153,6 +153,6 @@ class RSA {
         
         String decrypted = decrypt(crypted, chaves);
 
-        System.out.printf("Texto puro: %s; Texto criptografado: %s; Texto descriptografado: %s", entrada, crypted, decrypted);
+        System.out.printf("Texto puro: %s;\nTexto criptografado: %s;\nTexto descriptografado: %s", entrada, crypted, decrypted);
     }*/
 }

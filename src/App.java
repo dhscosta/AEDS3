@@ -172,7 +172,7 @@ public class App
                             System.out.println(saida);
                             jogos.setTitle(saida);
                             b = jogos.toByte();
-                            encrypt.write(b.length);
+                            encrypt.writeInt(b.length);
                             encrypt.write(b);
                         }
                     }
