@@ -115,24 +115,25 @@ public class App
                 break;
 
                 case 3:
+                    //inicializaçao
                     ler.nextLine();
                     RandomAccessFile arqDes = new RandomAccessFile("arqCrip.bin", "rw");
                     Game jg = new Game();
 
-                    //lê a chave 
+                    //lê a chave (tem que ser igual a de criptografia)
                     String keyDis;                    
                     System.out.print("Digite a chave para criptografar: ");
                     keyDis = ler.nextLine();
 
                     arqDes.seek(0);
-                    
+                    //enquanto  nao for final do arquivo
                     while(arqDes.getFilePointer() != arqDes.length()){
-                        tam = arqDes.readInt();
-
-                        byte[] byt = new byte[tam];
+                        tam = arqDes.readInt();       //tamanho do registro
+                        //leitura do registro
+                        byte[] byt = new byte[tam];  
                         arqDes.read(byt);
                         jg.fromByte(byt);
-
+                        //descriptografia do titulo
                         crypt = Des.decrypt(jg.title, keyDis);
                         jg.setTitle(crypt);
                         jg.mostrar();
