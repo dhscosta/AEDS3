@@ -15,10 +15,9 @@ public class App
         System.out.println("2 - Executar criptografia DES");
         System.out.println("3 - Executar descriptografia DES");
         System.out.println("4 - Executar criptografia RSA");
-        System.out.println("5 - Executar descriptografia RSA");
+        System.out.println("5 - Executar descriptografia RSA(funciona apenas após opção 4)");
     }
     public static void main(String[] args) throws Exception {
-
         //abre o csv 
         CSVReader csv = new CSVReader(new FileReader("games.csv"));
         Scanner ler = new Scanner(System.in);
@@ -30,6 +29,17 @@ public class App
         //cria um arquivo binario
         RandomAccessFile arq = new RandomAccessFile("gamees.bin", "rw");
         printInterface();
+
+        //Inicializa a classe RSA e geração de chaves da criptografia RSA
+        RSA rsa = new RSA();
+        Chaves chaves = rsa.generateKeys();
+
+        //variáveis de auxílio de RSA
+        int tamanho = 0;
+        byte[] b;
+        char c;
+        String saida;
+        Game jogo = new Game();
 
         Crud crud = new Crud();
         int x = 0;
@@ -63,49 +73,61 @@ public class App
                 case 4:
                     //Leitura para forçar parada
                     ler.nextLine();
-                    
-                    //inicializa classe RSA
-                    RSA rsa = new RSA();
-
-                    //Gerar chaves
-                    Chaves chaves = rsa.generateKeys();
+                
+                    //Criação de arquivo para armazenamento da criptografia
+                    RandomAccessFile encrypt = new RandomAccessFile("RSA_encrypt.bin", "rw");
 
                     //posiciona o ponteiro no início do arquivo
                     arq.seek(0);
 
-                    //variáveis de auxílio
-                    int tamanho = 0;
-                    byte[] b;
-                    long pos;
-                    String texto, saida;
-
-                    //Efetua o casamento de padrões com o padrão desejado procurando por todos os registros
+                    //Efetua a criptografia RSA em cima dos títulos dos jogos
                     while(arq.getFilePointer() != arq.length()){
-                        //Leitura da lápide, do tamanho, da posição do ponteiro de arquivo e do id do jogo, respectimente
-                        arq.readChar();
+                        //Leitura do registro
+                        c = arq.readChar();
                         tamanho = arq.readInt();
-                        pos = arq.getFilePointer();
-                        arq.readInt();
-
-                        //leitura do título
-                        texto = arq.readUTF();
                         
-                        //volta arquivo para a posicao do início do registro
-                        arq.seek(pos);
-                        
-                        //leitura para pular registro
-                        b = new byte[tamanho];
-                        arq.read(b);
+                        if(c == '#'){
+                            //se registro for inválido, pula o registro
+                            arq.skipBytes(tamanho);
+                        }else{
+                            //leitura do registro e iniciando jogo a partir dele    
+                            b = new byte[tamanho];
+                            arq.read(b);
+                            jogo.fromByte(b);
 
-                        //criptografia dos títulos e mostra no terminal
-                        saida = rsa.encrypt(texto, chaves);
-                        System.out.println(saida);
+                            //criptografia dos títulos, mostra no terminal e salva no arquivo
+                            saida = rsa.encrypt(jogo.title, chaves);
+                            System.out.println(saida);
+                            jogo.setTitle(saida);
+                            b = jogo.toByte();
+                            encrypt.write(b.length);
+                            encrypt.write(b);
+                        }
                     }
 
                 break;
 
                 case 5:
-                    //espaço reservado para o código de RSA
+                    //Abertura de arquivo criptografado para leitura
+                    RandomAccessFile decrypt = new RandomAccessFile("RSA_encrypt.bin", "r");
+
+                    //posiciona o ponteiro no início do arquivo
+                    decrypt.seek(0);
+
+                    //Efetua a descriptografia RSA em cima dos títulos dos jogos
+                    while(decrypt.getFilePointer() != decrypt.length()){
+                        //Leitura do tamanho do registro
+                        tamanho = decrypt.readInt();
+                        
+                        //leitura do registro e iniciando jogo a partir dele    
+                        b = new byte[tamanho];
+                        decrypt.read(b);
+                        jogo.fromByte(b);
+
+                        //descriptografia dos títulos e mostra no terminal
+                        saida = rsa.decrypt(jogo.title, chaves);
+                        System.out.println(saida);
+                    }
                 break;
             }
 
