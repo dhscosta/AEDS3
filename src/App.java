@@ -13,7 +13,9 @@ public class App
         System.out.println("0 - Parar a execução");
         System.out.println("1 - Carregar o arquivo com o os dados do csv (create)");
         System.out.println("2 - Executar criptografia DES");
-        System.out.println("3 - Executar criptografia RSA");
+        System.out.println("3 - Executar descriptografia DES");
+        System.out.println("4 - Executar criptografia RSA");
+        System.out.println("5 - Executar descriptografia RSA");
     }
     public static void main(String[] args) throws Exception {
 
@@ -55,6 +57,10 @@ public class App
                 break;
 
                 case 3:
+                    //espaço reservado para o código de DES
+                break;
+
+                case 4:
                     //Leitura para forçar parada
                     ler.nextLine();
                     
@@ -96,6 +102,10 @@ public class App
                         System.out.println(saida);
                     }
 
+                break;
+
+                case 5:
+                    //espaço reservado para o código de RSA
                 break;
             }
 
