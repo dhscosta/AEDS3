@@ -5,34 +5,19 @@ import java.nio.charset.StandardCharsets;
 
 public class Des {
 
-    public static void main(String[] args) {
-        String plaintext = "Hello, world!";
-        String key = "0123456789abcdef"; // Chave de 16 caracteres hexadecimal
-
-        try {
-            byte[] encryptedBytes = encrypt(plaintext, key);
-            String encryptedText = Base64.getEncoder().encodeToString(encryptedBytes);
-            System.out.println("Texto criptografado: " + encryptedText);
-
-            byte[] decryptedBytes = decrypt(encryptedBytes, key);
-            String decryptedText = new String(decryptedBytes, StandardCharsets.UTF_8);
-            System.out.println("Texto descriptografado: " + decryptedText);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static byte[] encrypt(String plaintext, String key) throws Exception {
-        Cipher cipher = Cipher.getInstance("DES");
+    public static String encrypt(String plaintext, String key) throws Exception {
+        Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "DES");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        return cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
+        byte[] encryptedBytes = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
+        return Base64.getEncoder().encodeToString(encryptedBytes);
     }
 
-    public static byte[] decrypt(byte[] ciphertext, String key) throws Exception {
-        Cipher cipher = Cipher.getInstance("DES");
+    public static String decrypt(String encryptedText, String key) throws Exception {
+        Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "DES");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        return cipher.doFinal(ciphertext);
+        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
+        return new String(decryptedBytes, StandardCharsets.UTF_8);
     }
 }

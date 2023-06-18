@@ -78,34 +78,35 @@ public class App
                     //variáveis de auxílio
                     int tam = 0;
                     byte[] by;
-                    char c;
-                    byte[] crypt;
+                    char ch;
+                    String crypt;
                     String cryptStr;
-                    Game jogo = new Game();
+                    Game j = new Game();
 
                     //Efetua o casamento de padrões com o padrão desejado procurando por todos os registros
                     while(arq.getFilePointer() != arq.length()){
-                        c = arq.readChar();         //le lapide
+                        ch = arq.readChar();         //le lapide
                         tam = arq.readInt();     //le tamanho registro
                         //pula se tiver lapide
-                        if(c == '#'){
+                        if(ch == '#'){
                             arq.skipBytes(tam);
                         }
                         else{
                             //lê o registro e transforma em um objeto game
                             by = new byte[tam];
                             arq.read(by);
-                            jogo.fromByte(by);
-                            jogo.mostrar();
+                            j.fromByte(by);
+                            j.mostrar();
 
 
                             //criptografia dos titulos, mostra no terminal, e salva no arquivo
-                            crypt = Des.encrypt(jogo.title, key);
+                            crypt = Des.encrypt(j.title, key);
                             cryptStr = crypt.toString();     
                             System.out.println(cryptStr);
-                            jogo.setTitle(cryptStr);           //seta titulo criptografado
-                            by = jogo.toByte();                //transforma o novo game em bytes
-                            jogo.mostrar();
+                            j.setTitle(cryptStr);           //seta titulo criptografado
+                            by = j.toByte();                //transforma o novo game em bytes
+                            j.mostrar();
+                            arqCrip.writeInt(by.length);
                             arqCrip.write(by);                 //escreve no arquivo criptografado
                         }
                     }
@@ -114,27 +115,27 @@ public class App
                 break;
 
                 case 3:
+                    ler.nextLine();
                     RandomAccessFile arqDes = new RandomAccessFile("arqCrip.bin", "rw");
                     Game jg = new Game();
 
                     //lê a chave 
+                    String keyDis;                    
                     System.out.print("Digite a chave para criptografar: ");
-                    key = ler.nextLine();
+                    keyDis = ler.nextLine();
 
                     arqDes.seek(0);
-
+                    
                     while(arqDes.getFilePointer() != arqDes.length()){
-                        c = arqDes.readChar();
                         tam = arqDes.readInt();
 
-                        by = new byte[tam];
-                        arqDes.read(by);
-                        jg.fromByte(by);
+                        byte[] byt = new byte[tam];
+                        arqDes.read(byt);
+                        jg.fromByte(byt);
 
-                        byte[] aux = jg.title.getBytes();
-                        crypt = Des.decrypt(aux, key);
-                        cryptStr = crypt.toString();
-                        System.out.println(cryptStr);
+                        crypt = Des.decrypt(jg.title, keyDis);
+                        jg.setTitle(crypt);
+                        jg.mostrar();
                     }
                     ler.nextLine();
                
