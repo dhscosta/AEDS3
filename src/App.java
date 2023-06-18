@@ -37,9 +37,8 @@ public class App
         //variáveis de auxílio de RSA
         int tamanho = 0;
         byte[] b;
-        char c;
         String saida;
-        Game jogo = new Game();
+        Game jogos = new Game();
 
         Crud crud = new Crud();
         int x = 0;
@@ -151,26 +150,29 @@ public class App
                     //posiciona o ponteiro no início do arquivo
                     arq.seek(0);
 
+                    //variável de auxílio
+                    char caracter;
+
                     //Efetua a criptografia RSA em cima dos títulos dos jogos
                     while(arq.getFilePointer() != arq.length()){
                         //Leitura do registro
-                        c = arq.readChar();
+                        caracter = arq.readChar();
                         tamanho = arq.readInt();
                         
-                        if(c == '#'){
+                        if(caracter == '#'){
                             //se registro for inválido, pula o registro
                             arq.skipBytes(tamanho);
                         }else{
                             //leitura do registro e iniciando jogo a partir dele    
                             b = new byte[tamanho];
                             arq.read(b);
-                            jogo.fromByte(b);
+                            jogos.fromByte(b);
 
                             //criptografia dos títulos, mostra no terminal e salva no arquivo
-                            saida = rsa.encrypt(jogo.title, chaves);
+                            saida = rsa.encrypt(jogos.title, chaves);
                             System.out.println(saida);
-                            jogo.setTitle(saida);
-                            b = jogo.toByte();
+                            jogos.setTitle(saida);
+                            b = jogos.toByte();
                             encrypt.write(b.length);
                             encrypt.write(b);
                         }
@@ -193,10 +195,10 @@ public class App
                         //leitura do registro e iniciando jogo a partir dele    
                         b = new byte[tamanho];
                         decrypt.read(b);
-                        jogo.fromByte(b);
+                        jogos.fromByte(b);
 
                         //descriptografia dos títulos e mostra no terminal
-                        saida = rsa.decrypt(jogo.title, chaves);
+                        saida = rsa.decrypt(jogos.title, chaves);
                         System.out.println(saida);
                     }
                 break;
