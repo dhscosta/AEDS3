@@ -4,35 +4,25 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
 public class Des {
-
-    public static void main(String[] args) {
-        String plaintext = "Hello, world!";
-        String key = "0123456789abcdef"; // Chave de 16 caracteres hexadecimal
-
-        try {
-            byte[] encryptedBytes = encrypt(plaintext, key);
-            String encryptedText = Base64.getEncoder().encodeToString(encryptedBytes);
-            System.out.println("Texto criptografado: " + encryptedText);
-
-            byte[] decryptedBytes = decrypt(encryptedBytes, key);
-            String decryptedText = new String(decryptedBytes, StandardCharsets.UTF_8);
-            System.out.println("Texto descriptografado: " + decryptedText);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    /*
+     * função pra criptografar uma string
+     * params 
+     * ori -> string original
+     * key -> chave de criptografia
+     */
+    public static String encrypt(String ori, String key) throws Exception {
+        Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");                                 //inicializa o modo de operaçao do cipher
+        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "DES");   //cria uma chave secreta a partir da sequencia de bytes da chave lida
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey);                                                //inicializa o cipher no modo de criptografia (enviando a chave)
+        byte[] cripBytes = cipher.doFinal(ori.getBytes(StandardCharsets.UTF_8));                    //criptografa o texto original
+        return Base64.getEncoder().encodeToString(cripBytes);                                       //transforma em string
     }
 
-    public static byte[] encrypt(String plaintext, String key) throws Exception {
-        Cipher cipher = Cipher.getInstance("DES");
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "DES");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        return cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public static byte[] decrypt(byte[] ciphertext, String key) throws Exception {
-        Cipher cipher = Cipher.getInstance("DES");
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "DES");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        return cipher.doFinal(ciphertext);
+    public static String decrypt(String cripText, String key) throws Exception {
+        Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");                                 //inicializa o modo de operaçao do cipher
+        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "DES");   //cria uma chave secreta a partir da sequencia de bytes da chave lida
+        cipher.init(Cipher.DECRYPT_MODE, secretKey);                                                //inicializa o cipher no modo de descriptografia (enviando a chave)
+        byte[] decrypBytes = cipher.doFinal(Base64.getDecoder().decode(cripText));                  //descriptografa 
+        return new String(decrypBytes, StandardCharsets.UTF_8);                                     //cria a string descriptografada
     }
 }
