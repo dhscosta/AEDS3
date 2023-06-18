@@ -96,14 +96,11 @@ public class App
                             by = new byte[tam];
                             arq.read(by);
                             j.fromByte(by);
-                            j.mostrar();
-
 
                             //criptografia dos titulos, mostra no terminal, e salva no arquivo
                             crypt = Des.encrypt(j.title, key);
-                            cryptStr = crypt.toString();     
-                            System.out.println(cryptStr);
-                            j.setTitle(cryptStr);           //seta titulo criptografado
+                            System.out.println(crypt);
+                            j.setTitle(crypt);           //seta titulo criptografado
                             by = j.toByte();                //transforma o novo game em bytes
                             j.mostrar();
                             arqCrip.writeInt(by.length);
